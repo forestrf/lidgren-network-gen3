@@ -72,16 +72,25 @@ namespace Lidgren.Network
 
 		public static IPAddress GetBroadcastAddress()
 		{
-			var ni = GetNetworkInterface();
-			if (ni == null)
+			var nic = GetNetworkInterface();
+			if (nic == null)
 				return null;
 
-			var properties = ni.GetIPProperties();
+			var properties = nic.GetIPProperties();
 			foreach (UnicastIPAddressInformation unicastAddress in properties.UnicastAddresses)
 			{
 				if (unicastAddress != null && unicastAddress.Address != null && unicastAddress.Address.AddressFamily == AddressFamily.InterNetwork)
 				{
-					var mask = unicastAddress.IPv4Mask;
+				    IPAddress mask;
+				    if (Environment.OSVersion.Platform == PlatformID.Unix)
+				    {
+				        mask = IPAddress.Parse(IPInfoTools.GetIPv4Mask(nic.Name));
+				    }
+				    else
+				    {
+                        mask = unicastAddress.IPv4Mask;    
+				    }
+                    
 					byte[] ipAdressBytes = unicastAddress.Address.GetAddressBytes();
 					byte[] subnetMaskBytes = mask.GetAddressBytes();
 

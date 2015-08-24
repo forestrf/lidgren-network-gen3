@@ -135,16 +135,15 @@ namespace Lidgren.Network
 					}
 
 					// check each entry for a valid IP address
-					foreach (var ipCurrent in entry.AddressList)
-					{
-						if (ipCurrent.AddressFamily == AddressFamily.InterNetwork)
-						{
-							callback(ipCurrent);
-							return;
-						}
-					}
+				    for (int i = 0; i < entry.AddressList.Length; i++) {
+				        var ipCurrent = entry.AddressList[i];
+				        if (ipCurrent.AddressFamily == AddressFamily.InterNetwork) {
+				            callback(ipCurrent);
+				            return;
+				        }
+				    }
 
-					callback(null);
+				    callback(null);
 				}, null);
 			}
 			catch (SocketException ex)
@@ -185,12 +184,13 @@ namespace Lidgren.Network
 				var addresses = Dns.GetHostAddresses(ipOrHost);
 				if (addresses == null)
 					return null;
-				foreach (var address in addresses)
-				{
-					if (address.AddressFamily == AddressFamily.InterNetwork)
-						return address;
-				}
-				return null;
+			    for (int i = 0; i < addresses.Length; i++) {
+			        var address = addresses[i];
+			        if (address.AddressFamily == AddressFamily.InterNetwork) {
+			            return address;
+			        }
+			    }
+			    return null;
 			}
 			catch (SocketException ex)
 			{

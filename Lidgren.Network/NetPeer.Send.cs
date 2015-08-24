@@ -124,22 +124,20 @@ namespace Lidgren.Network
 			int mtu = GetMTU(recipients);
 
 			int len = msg.GetEncodedSize();
-			if (len <= mtu)
-			{
-				Interlocked.Add(ref msg.m_recyclingCount, recipients.Count);
-				foreach (NetConnection conn in recipients)
-				{
-					if (conn == null)
-					{
-						Interlocked.Decrement(ref msg.m_recyclingCount);
-						continue;
-					}
-					NetSendResult res = conn.EnqueueMessage(msg, method, sequenceChannel);
-					if (res == NetSendResult.Dropped)
-						Interlocked.Decrement(ref msg.m_recyclingCount);
-				}
-			}
-			else
+			if (len <= mtu) {
+			    Interlocked.Add(ref msg.m_recyclingCount, recipients.Count);
+			    for (int i = 0; i < recipients.Count; i++) {
+			        NetConnection conn = recipients[i];
+			        if (conn == null) {
+			            Interlocked.Decrement(ref msg.m_recyclingCount);
+			            continue;
+			        }
+			        NetSendResult res = conn.EnqueueMessage(msg, method, sequenceChannel);
+			        if (res == NetSendResult.Dropped) {
+			            Interlocked.Decrement(ref msg.m_recyclingCount);
+			        }
+			    }
+			} else
 			{
 				// message must be fragmented!
 				SendFragmentedMessage(msg, recipients, method, sequenceChannel);
@@ -214,8 +212,10 @@ namespace Lidgren.Network
 			msg.m_isSent = true;
 
 			Interlocked.Add(ref msg.m_recyclingCount, recipients.Count);
-			foreach (NetEndPoint ep in recipients)
-				m_unsentUnconnectedMessages.Enqueue(new NetTuple<NetEndPoint, NetOutgoingMessage>(ep, msg));
+		    for (int i = 0; i < recipients.Count; i++) {
+		        IPEndPoint ep = recipients[i];
+		        m_unsentUnconnectedMessages.Enqueue(new NetTuple<NetEndPoint, NetOutgoingMessage>(ep, msg));
+		    }
 		}
 
 		/// <summary>

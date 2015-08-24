@@ -34,29 +34,33 @@ namespace Lidgren.Network
 				return null;
 
 			NetworkInterface best = null;
-			foreach (NetworkInterface adapter in nics)
-			{
-				if (adapter.NetworkInterfaceType == NetworkInterfaceType.Loopback || adapter.NetworkInterfaceType == NetworkInterfaceType.Unknown)
-					continue;
-				if (!adapter.Supports(NetworkInterfaceComponent.IPv4))
-					continue;
-				if (best == null)
-					best = adapter;
-				if (adapter.OperationalStatus != OperationalStatus.Up)
-					continue;
+		    for (int i = 0; i < nics.Length; i++) {
+		        NetworkInterface adapter = nics[i];
+		        if (adapter.NetworkInterfaceType == NetworkInterfaceType.Loopback ||
+		            adapter.NetworkInterfaceType == NetworkInterfaceType.Unknown) {
+		            continue;
+		        }
+		        if (!adapter.Supports(NetworkInterfaceComponent.IPv4)) {
+		            continue;
+		        }
+		        if (best == null) {
+		            best = adapter;
+		        }
+		        if (adapter.OperationalStatus != OperationalStatus.Up) {
+		            continue;
+		        }
 
-				// make sure this adapter has any ipv4 addresses
-				IPInterfaceProperties properties = adapter.GetIPProperties();
-				foreach (UnicastIPAddressInformation unicastAddress in properties.UnicastAddresses)
-				{
-					if (unicastAddress != null && unicastAddress.Address != null && unicastAddress.Address.AddressFamily == AddressFamily.InterNetwork)
-					{
-						// Yes it does, return this network interface.
-						return adapter;
-					}
-				}
-			}
-			return best;
+		        // make sure this adapter has any ipv4 addresses
+		        IPInterfaceProperties properties = adapter.GetIPProperties();
+		        foreach (UnicastIPAddressInformation unicastAddress in properties.UnicastAddresses) {
+		            if (unicastAddress != null && unicastAddress.Address != null &&
+		                unicastAddress.Address.AddressFamily == AddressFamily.InterNetwork) {
+		                // Yes it does, return this network interface.
+		                return adapter;
+		            }
+		        }
+		    }
+		    return best;
 		}
 
 		/// <summary>

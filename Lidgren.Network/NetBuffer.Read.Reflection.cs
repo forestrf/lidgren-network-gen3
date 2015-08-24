@@ -44,21 +44,20 @@ namespace Lidgren.Network
 			FieldInfo[] fields = tp.GetFields(flags);
 			NetUtility.SortMembersList(fields);
 
-			foreach (FieldInfo fi in fields)
-			{
-				object value;
+		    for (int i = 0; i < fields.Length; i++) {
+		        FieldInfo fi = fields[i];
+		        object value;
 
-				// find read method
-				MethodInfo readMethod;
-				if (s_readMethods.TryGetValue(fi.FieldType, out readMethod))
-				{
-					// read value
-					value = readMethod.Invoke(this, null);
+		        // find read method
+		        MethodInfo readMethod;
+		        if (s_readMethods.TryGetValue(fi.FieldType, out readMethod)) {
+		            // read value
+		            value = readMethod.Invoke(this, null);
 
-					// set the value
-					fi.SetValue(target, value);
-				}
-			}
+		            // set the value
+		            fi.SetValue(target, value);
+		        }
+		    }
 		}
 
 		/// <summary>
@@ -81,27 +80,27 @@ namespace Lidgren.Network
 
 			PropertyInfo[] fields = tp.GetProperties(flags);
 			NetUtility.SortMembersList(fields);
-			foreach (PropertyInfo fi in fields)
-			{
-				object value;
+		    for (int i = 0; i < fields.Length; i++) {
+		        PropertyInfo fi = fields[i];
+		        object value;
 
-				// find read method
-				MethodInfo readMethod;
-				if (s_readMethods.TryGetValue(fi.PropertyType, out readMethod))
-				{
-					// read value
-					value = readMethod.Invoke(this, null);
+		        // find read method
+		        MethodInfo readMethod;
+		        if (s_readMethods.TryGetValue(fi.PropertyType, out readMethod)) {
+		            // read value
+		            value = readMethod.Invoke(this, null);
 
-					// set the value
+		            // set the value
 #if UNITY_WEBPLAYER || UNITY_4_5
-					var setMethod = fi.GetSetMethod();
+		            var setMethod = fi.GetSetMethod();
 #else
 					var setMethod = fi.SetMethod;
 #endif
-					if (setMethod != null)
-						setMethod.Invoke(target, new object[] { value });
-				}
-			}
+		            if (setMethod != null) {
+		                setMethod.Invoke(target, new object[] {value});
+		            }
+		        }
+		    }
 		}
 	}
 }

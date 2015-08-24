@@ -176,34 +176,37 @@ namespace Lidgren.Network
 
 			int numUnsent = 0;
 			int numStored = 0;
-			foreach (NetSenderChannelBase sendChan in m_connection.m_sendChannels)
-			{
-				if (sendChan == null)
-					continue;
-				numUnsent += sendChan.QueuedSendsCount;
+		    for (int i = 0; i < m_connection.m_sendChannels.Length; i++) {
+		        NetSenderChannelBase sendChan = m_connection.m_sendChannels[i];
+		        if (sendChan == null) {
+		            continue;
+		        }
+		        numUnsent += sendChan.QueuedSendsCount;
 
-				var relSendChan = sendChan as NetReliableSenderChannel;
-				if (relSendChan != null)
-				{
-					for (int i = 0; i < relSendChan.m_storedMessages.Length; i++)
-						if (relSendChan.m_storedMessages[i].Message != null)
-							numStored++;
-				}
-			}
+		        var relSendChan = sendChan as NetReliableSenderChannel;
+		        if (relSendChan != null) {
+		            for (int j = 0; j < relSendChan.m_storedMessages.Length; j++) {
+		                if (relSendChan.m_storedMessages[j].Message != null) {
+		                    numStored++;
+		                }
+		            }
+		        }
+		    }
 
-			int numWithheld = 0;
-			foreach (NetReceiverChannelBase recChan in m_connection.m_receiveChannels)
-			{
-				var relRecChan = recChan as NetReliableOrderedReceiver;
-				if (relRecChan != null)
-				{
-					for (int i = 0; i < relRecChan.m_withheldMessages.Length; i++)
-						if (relRecChan.m_withheldMessages[i] != null)
-							numWithheld++;
-				}
-			}
+		    int numWithheld = 0;
+		    for (int i = 0; i < m_connection.m_receiveChannels.Length; i++) {
+		        NetReceiverChannelBase recChan = m_connection.m_receiveChannels[i];
+		        var relRecChan = recChan as NetReliableOrderedReceiver;
+		        if (relRecChan != null) {
+		            for (int j = 0; j < relRecChan.m_withheldMessages.Length; j++) {
+		                if (relRecChan.m_withheldMessages[j] != null) {
+		                    numWithheld++;
+		                }
+		            }
+		        }
+		    }
 
-			bdr.AppendLine("Unsent messages: " + numUnsent);
+		    bdr.AppendLine("Unsent messages: " + numUnsent);
 			bdr.AppendLine("Stored messages: " + numStored);
 			bdr.AppendLine("Withheld messages: " + numWithheld);
 

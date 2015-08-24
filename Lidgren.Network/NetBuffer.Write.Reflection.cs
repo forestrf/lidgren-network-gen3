@@ -43,17 +43,18 @@ namespace Lidgren.Network
 			FieldInfo[] fields = tp.GetFields(flags);
 			NetUtility.SortMembersList(fields);
 
-			foreach (FieldInfo fi in fields)
-			{
-				object value = fi.GetValue(ob);
+		    for (int i = 0; i < fields.Length; i++) {
+		        FieldInfo fi = fields[i];
+		        object value = fi.GetValue(ob);
 
-				// find the appropriate Write method
-				MethodInfo writeMethod;
-				if (s_writeMethods.TryGetValue(fi.FieldType, out writeMethod))
-					writeMethod.Invoke(this, new object[] { value });
-				else
-					throw new NetException("Failed to find write method for type " + fi.FieldType);
-			}
+		        // find the appropriate Write method
+		        MethodInfo writeMethod;
+		        if (s_writeMethods.TryGetValue(fi.FieldType, out writeMethod)) {
+		            writeMethod.Invoke(this, new object[] {value});
+		        } else {
+		            throw new NetException("Failed to find write method for type " + fi.FieldType);
+		        }
+		    }
 		}
 
 		/// <summary>
@@ -76,23 +77,23 @@ namespace Lidgren.Network
 			PropertyInfo[] fields = tp.GetProperties(flags);
 			NetUtility.SortMembersList(fields);
 
-			foreach (PropertyInfo fi in fields)
-			{
+		    for (int i = 0; i < fields.Length; i++) {
+		        PropertyInfo fi = fields[i];
 #if UNITY_WEBPLAYER || UNITY_4_5
-				MethodInfo getMethod = fi.GetGetMethod();
+		        MethodInfo getMethod = fi.GetGetMethod();
 #else
 				MethodInfo getMethod = fi.GetMethod;
 #endif
-				if (getMethod != null)
-				{
-					object value = getMethod.Invoke(ob, null);
+		        if (getMethod != null) {
+		            object value = getMethod.Invoke(ob, null);
 
-					// find the appropriate Write method
-					MethodInfo writeMethod;
-					if (s_writeMethods.TryGetValue(fi.PropertyType, out writeMethod))
-						writeMethod.Invoke(this, new object[] { value });
-				}
-			}
+		            // find the appropriate Write method
+		            MethodInfo writeMethod;
+		            if (s_writeMethods.TryGetValue(fi.PropertyType, out writeMethod)) {
+		                writeMethod.Invoke(this, new object[] {value});
+		            }
+		        }
+		    }
 		}
 	}
 }

@@ -23,43 +23,50 @@ namespace UnitTests
 			algos.Add(new NetDESEncryption(peer, "TopSecret"));
 			algos.Add(new NetTripleDESEncryption(peer, "TopSecret"));
 
-			foreach (var algo in algos)
-			{
-				NetOutgoingMessage om = peer.CreateMessage();
-				om.Write("Hallon");
-				om.Write(42);
-				om.Write(5, 5);
-				om.Write(true);
-				om.Write("kokos");
-				int unencLen = om.LengthBits;
-				om.Encrypt(algo);
+		    for (int i = 0; i < algos.Count; i++) {
+		        var algo = algos[i];
+		        NetOutgoingMessage om = peer.CreateMessage();
+		        om.Write("Hallon");
+		        om.Write(42);
+		        om.Write(5, 5);
+		        om.Write(true);
+		        om.Write("kokos");
+		        int unencLen = om.LengthBits;
+		        om.Encrypt(algo);
 
-				// convert to incoming message
-				NetIncomingMessage im = Program.CreateIncomingMessage(om.PeekDataBuffer(), om.LengthBits);
-				if (im.Data == null || im.Data.Length == 0)
-					throw new NetException("bad im!");
+		        // convert to incoming message
+		        NetIncomingMessage im = Program.CreateIncomingMessage(om.PeekDataBuffer(), om.LengthBits);
+		        if (im.Data == null || im.Data.Length == 0) {
+		            throw new NetException("bad im!");
+		        }
 
-				im.Decrypt(algo);
+		        im.Decrypt(algo);
 
-				if (im.Data == null || im.Data.Length == 0 || im.LengthBits != unencLen)
-					throw new NetException("Length fail");
+		        if (im.Data == null || im.Data.Length == 0 || im.LengthBits != unencLen) {
+		            throw new NetException("Length fail");
+		        }
 
-				var str = im.ReadString();
-				if (str != "Hallon")
-					throw new NetException("fail");
-				if (im.ReadInt32() != 42)
-					throw new NetException("fail");
-				if (im.ReadInt32(5) != 5)
-					throw new NetException("fail");
-				if (im.ReadBoolean() != true)
-					throw new NetException("fail");
-				if (im.ReadString() != "kokos")
-					throw new NetException("fail");
+		        var str = im.ReadString();
+		        if (str != "Hallon") {
+		            throw new NetException("fail");
+		        }
+		        if (im.ReadInt32() != 42) {
+		            throw new NetException("fail");
+		        }
+		        if (im.ReadInt32(5) != 5) {
+		            throw new NetException("fail");
+		        }
+		        if (im.ReadBoolean() != true) {
+		            throw new NetException("fail");
+		        }
+		        if (im.ReadString() != "kokos") {
+		            throw new NetException("fail");
+		        }
 
-				Console.WriteLine(algo.GetType().Name + " encryption verified");
-			}
+		        Console.WriteLine(algo.GetType().Name + " encryption verified");
+		    }
 
-			for (int i = 0; i < 100; i++)
+		    for (int i = 0; i < 100; i++)
 			{
 				byte[] salt = NetSRP.CreateRandomSalt();
 				byte[] x = NetSRP.ComputePrivateKey("user", "password", salt);

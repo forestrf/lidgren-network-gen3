@@ -64,16 +64,18 @@ namespace Lidgren.Network
 
 				Interlocked.Add(ref chunk.m_recyclingCount, recipients.Count);
 
-				foreach (NetConnection recipient in recipients)
-				{
-					var res = recipient.EnqueueMessage(chunk, method, sequenceChannel);
-					if (res == NetSendResult.Dropped)
-						Interlocked.Decrement(ref chunk.m_recyclingCount);
-					if ((int)res > (int)retval)
-						retval = res; // return "worst" result
-				}
+			    for (int j = 0; j < recipients.Count; j++) {
+			        NetConnection recipient = recipients[j];
+			        var res = recipient.EnqueueMessage(chunk, method, sequenceChannel);
+			        if (res == NetSendResult.Dropped) {
+			            Interlocked.Decrement(ref chunk.m_recyclingCount);
+			        }
+			        if ((int) res > (int) retval) {
+			            retval = res; // return "worst" result
+			        }
+			    }
 
-				bitsLeft -= bitsPerChunk;
+			    bitsLeft -= bitsPerChunk;
 			}
 
 			return retval;

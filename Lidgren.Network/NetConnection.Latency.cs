@@ -126,14 +126,15 @@ namespace Lidgren.Network
 
 			// update resend delay for all channels
 			double resendDelay = GetResendDelay();
-			foreach (var chan in m_sendChannels)
-			{
-				var rchan = chan as NetReliableSenderChannel;
-				if (rchan != null)
-					rchan.m_resendDelay = resendDelay;
-			}
+		    for (int i = 0; i < m_sendChannels.Length; i++) {
+		        var chan = m_sendChannels[i];
+		        var rchan = chan as NetReliableSenderChannel;
+		        if (rchan != null) {
+		            rchan.m_resendDelay = resendDelay;
+		        }
+		    }
 
-			// m_peer.LogVerbose("Timeout deadline pushed to  " + m_timeoutDeadline);
+		    // m_peer.LogVerbose("Timeout deadline pushed to  " + m_timeoutDeadline);
 
 			// notify the application that average rtt changed
 			if (m_peer.m_configuration.IsMessageTypeEnabled(NetIncomingMessageType.ConnectionLatencyUpdated))

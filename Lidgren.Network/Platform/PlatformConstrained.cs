@@ -1,4 +1,4 @@
-﻿#if __CONSTRAINED__ || UNITY_STANDALONE_LINUX
+﻿#if __CONSTRAINED__ || UNITY
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -29,7 +29,7 @@ namespace Lidgren.Network
 		public static IPAddress GetMyAddress(out IPAddress mask)
 		{
 			mask = null;
-#if UNITY_ANDROID || UNITY_STANDALONE_OSX || UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX || UNITY_IOS
+#if UNITY
 			try
 			{
 				if (!(UnityEngine.Application.internetReachability == UnityEngine.NetworkReachability.NotReachable))

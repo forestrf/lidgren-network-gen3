@@ -123,7 +123,7 @@ namespace Lidgren.Network
 
 			if (m_status == NetConnectionStatus.Connected)
 			{
-				m_timeoutDeadline = NetTime.Now + m_peerConfiguration.m_connectionTimeout;
+				ResetTimeout(NetTime.Now);
 				m_peer.LogVerbose("Timeout deadline initialized to  " + m_timeoutDeadline);
 			}
 
@@ -488,6 +488,8 @@ namespace Lidgren.Network
 		internal void ReceivedMessage(NetIncomingMessage msg)
 		{
 			m_peer.VerifyNetworkThread();
+
+			ResetTimeout(NetTime.Now);
 
 			NetMessageType tp = msg.m_receivedMessageType;
 

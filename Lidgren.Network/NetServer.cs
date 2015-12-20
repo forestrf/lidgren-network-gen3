@@ -63,6 +63,8 @@ namespace Lidgren.Network
 
 			if (recipients.Count > 0)
 				SendMessage(msg, recipients, method, sequenceChannel);
+			else if (msg.m_isSent == false)
+				Recycle(msg);
 		}
 
 		/// <summary>

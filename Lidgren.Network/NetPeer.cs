@@ -129,7 +129,7 @@ namespace Lidgren.Network
 		/// <summary>
 		/// Binds to socket and spawns the networking thread
 		/// </summary>
-		public void Start()
+		public virtual void Start()
 		{
 			if (m_status != NetPeerStatus.NotRunning)
 			{
@@ -202,7 +202,7 @@ namespace Lidgren.Network
 		/// <summary>
 		/// Read a pending message from any connection, if any
 		/// </summary>
-		public NetIncomingMessage ReadMessage()
+		public virtual NetIncomingMessage ReadMessage()
 		{
 			NetIncomingMessage retval;
 			if (m_releasedIncomingMessages.TryDequeue(out retval))

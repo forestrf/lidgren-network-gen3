@@ -46,6 +46,22 @@ namespace Lidgren.Network
 
 		public object extraData;                  // used by the user, if needed
 
+		/// <summary>
+		/// Create a copy of this Message
+		/// </summary>
+		public NetOutgoingMessage Clone() {
+			NetOutgoingMessage cloned = new NetOutgoingMessage();
+			cloned.m_recyclingCount = this.m_recyclingCount;
+			cloned.m_fragmentGroup = this.m_fragmentGroup;
+			cloned.m_fragmentGroupTotalBits = this.m_fragmentGroupTotalBits;
+			cloned.m_fragmentChunkByteSize = this.m_fragmentChunkByteSize;
+			cloned.m_fragmentChunkNumber = this.m_fragmentChunkNumber;
+			cloned.m_data = this.m_data;
+			cloned.m_bitLength = this.m_bitLength;
+			cloned.m_readPosition = this.m_readPosition;
+			return cloned;
+		}
+
 		internal NetOutgoingMessage()
 		{
 		}

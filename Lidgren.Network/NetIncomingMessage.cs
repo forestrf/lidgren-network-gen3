@@ -43,9 +43,31 @@ namespace Lidgren.Network
 		public object extraData;                  // used by the user, if needed
 
 		/// <summary>
+		/// Create a copy of this Message
+		/// </summary>
+		public NetIncomingMessage Clone() {
+			NetIncomingMessage cloned = new NetIncomingMessage();
+			cloned.m_incomingMessageType = m_incomingMessageType;
+			cloned.m_senderEndPoint = m_senderEndPoint;
+			cloned.m_senderConnection = m_senderConnection;
+			cloned.m_sequenceNumber = m_sequenceNumber;
+			cloned.m_receivedMessageType = m_receivedMessageType;
+			cloned.m_isFragment = m_isFragment;
+			cloned.m_receiveTime = m_receiveTime;
+			cloned.m_data = m_data;
+			cloned.m_bitLength = m_bitLength;
+			cloned.m_readPosition = m_readPosition;
+			return cloned;
+		}
+
+		/// <summary>
 		/// Gets the type of this incoming message
 		/// </summary>
-		public NetIncomingMessageType MessageType { get { return m_incomingMessageType; } }
+		public NetIncomingMessageType MessageType {
+			get { return m_incomingMessageType; }
+			set { m_incomingMessageType = value; }
+
+		}
 
 		/// <summary>
 		/// Gets the delivery method this message was sent with (if user data)
@@ -70,7 +92,10 @@ namespace Lidgren.Network
 		/// <summary>
 		/// What local time the message was received from the network
 		/// </summary>
-		public double ReceiveTime { get { return m_receiveTime; } }
+		public double ReceiveTime {
+			get { return m_receiveTime; }
+			set { m_receiveTime = value; }
+		}
 
 		internal NetIncomingMessage()
 		{

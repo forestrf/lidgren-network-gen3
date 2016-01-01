@@ -43,6 +43,14 @@ namespace Lidgren.Network
 		public object extraData;                  // used by the user, if needed
 
 		/// <summary>
+		/// Constructor
+		/// </summary>
+		public NetIncomingMessage(NetIncomingMessageType msgType, double rTime) {
+			m_incomingMessageType = msgType;
+			m_receiveTime = rTime;
+		}
+
+		/// <summary>
 		/// Create a copy of this Message
 		/// </summary>
 		public NetIncomingMessage Clone() {
@@ -63,11 +71,7 @@ namespace Lidgren.Network
 		/// <summary>
 		/// Gets the type of this incoming message
 		/// </summary>
-		public NetIncomingMessageType MessageType {
-			get { return m_incomingMessageType; }
-			set { m_incomingMessageType = value; }
-
-		}
+		public NetIncomingMessageType MessageType {	get { return m_incomingMessageType; } }
 
 		/// <summary>
 		/// Gets the delivery method this message was sent with (if user data)
@@ -92,10 +96,7 @@ namespace Lidgren.Network
 		/// <summary>
 		/// What local time the message was received from the network
 		/// </summary>
-		public double ReceiveTime {
-			get { return m_receiveTime; }
-			set { m_receiveTime = value; }
-		}
+		public double ReceiveTime { get { return m_receiveTime; } }
 
 		internal NetIncomingMessage()
 		{

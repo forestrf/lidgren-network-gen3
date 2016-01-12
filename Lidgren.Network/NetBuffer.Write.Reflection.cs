@@ -77,16 +77,12 @@ namespace Lidgren.Network
 			PropertyInfo[] fields = tp.GetProperties(flags);
 			NetUtility.SortMembersList(fields);
 
-		    for (int i = 0; i < fields.Length; i++) {
-		        PropertyInfo fi = fields[i];
-#if UNITY_WEBPLAYER || UNITY_4_5
-		        MethodInfo getMethod = fi.GetGetMethod();
-#else
-				MethodInfo getMethod = fi.GetMethod;
-#endif
-		        if (getMethod != null) {
-		            object value = getMethod.Invoke(ob, null);
-
+			for (int i = 0; i < fields.Length; i++) {
+				PropertyInfo fi = fields[i];
+				MethodInfo getMethod = fi.GetGetMethod();
+				if (getMethod != null)
+				{
+					object value = getMethod.Invoke(ob, null);
 		            // find the appropriate Write method
 		            MethodInfo writeMethod;
 		            if (s_writeMethods.TryGetValue(fi.PropertyType, out writeMethod)) {

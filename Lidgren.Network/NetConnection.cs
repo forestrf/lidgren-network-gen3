@@ -12,7 +12,7 @@ namespace Lidgren.Network
 	/// <summary>
 	/// Represents a connection to a remote peer
 	/// </summary>
-	[DebuggerDisplay("RemoteUniqueIdentifier={RemoteUniqueIdentifier} RemoteEndPoint={remoteEndPoint}")]
+	[DebuggerDisplay("RemoteUniqueIdentifier={RemoteUniqueIdentifier} RemoteEndPoint={m_remoteEndPoint}")]
 	public partial class NetConnection
 	{
 		private const int m_infrequentEventsSkipFrames = 8; // number of heartbeats to skip checking for infrequent events (ping, timeout etc)
@@ -268,7 +268,7 @@ namespace Lidgren.Network
 					if (channel != null)
 					{
 						channel.SendQueuedMessages(now);
-						if (channel.QueuedSendsCount > 0)
+						if (channel.NeedToSendMessages())
 							m_peer.m_needFlushSendQueue = true; // failed to send all queued sends; likely a full window - need to try again
 					}
 					NetException.Assert(m_sendBufferWritePtr < 1 || m_sendBufferNumMessages > 0);

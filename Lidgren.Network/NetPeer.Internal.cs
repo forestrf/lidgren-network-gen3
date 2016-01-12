@@ -124,7 +124,7 @@ namespace Lidgren.Network
 				m_socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
 			if (reBind)
-				m_socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, (int)1); 
+				m_socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, (int)1);
 
 			m_socket.ReceiveBufferSize = m_configuration.ReceiveBufferSize;
 			m_socket.SendBufferSize = m_configuration.SendBufferSize;
@@ -224,34 +224,42 @@ namespace Lidgren.Network
 
 			// disconnect and make one final heartbeat
 			var list = new List<NetConnection>(m_handshakes.Count + m_connections.Count);
-			lock (m_connections) {
-			    for (int i = 0; i < m_connections.Count; i++) {
-			        var conn = m_connections[i];
-			        if (conn != null) {
-			            list.Add(conn);
-			        }
-			    }
-
-			    lock (m_handshakes) {
-			        foreach (var hs in m_handshakes.Values)
-						if (hs != null)
-							list.Add(hs);
-
-					// shut down connections
-			        for (int i = 0; i < list.Count; i++) {
-			            NetConnection conn = list[i];
-			            conn.Shutdown(m_shutdownReason);
-			        }
-			    }
+			lock (m_connections)
+			{
+				for (int i = 0; i < m_connections.Count; i++)
+				{
+						var conn = m_connections[i];
+						if (conn != null)
+						{
+								list.Add(conn);
+						}
+				}
 			}
 
-		    FlushDelayedPackets();
+			lock (m_handshakes)
+			{
+				foreach (var hs in m_handshakes.Values)
+				{
+						if (hs != null && list.Contains(hs) == false)
+						{
+							list.Add(hs);
+						}
+				}
+			}
+
+			// shut down connections
+			for (int i = 0; i < list.Count; i++) {
+					NetConnection conn = list[i];
+					conn.Shutdown(m_shutdownReason);
+			}
+
+			FlushDelayedPackets();
 
 			// one final heartbeat, will send stuff and do disconnect
 			Heartbeat();
 
 			NetUtility.Sleep(10);
-			
+
 			lock (m_initializeLock)
 			{
 				try
@@ -419,7 +427,7 @@ namespace Lidgren.Network
 					switch (sx.SocketErrorCode)
 					{
 						case SocketError.ConnectionReset:
-							// connection reset by peer, aka connection forcibly closed aka "ICMP port unreachable" 
+							// connection reset by peer, aka connection forcibly closed aka "ICMP port unreachable"
 							// we should shut down the connection; but m_senderRemote seemingly cannot be trusted, so which connection should we shut down?!
 							// So, what to do?
 							LogWarning("ConnectionReset");
@@ -446,7 +454,7 @@ namespace Lidgren.Network
 				if (m_upnp != null && now < m_upnp.m_discoveryResponseDeadline && bytesReceived > 32)
 				{
 					// is this an UPnP response?
-					string resp = System.Text.Encoding.ASCII.GetString(m_receiveBuffer, 0, bytesReceived);
+					string resp = System.Text.Encoding.UTF8.GetString(m_receiveBuffer, 0, bytesReceived);
 					if (resp.Contains("upnp:rootdevice") || resp.Contains("UPnP/1.0"))
 					{
 						try

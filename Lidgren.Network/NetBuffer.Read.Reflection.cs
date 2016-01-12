@@ -80,27 +80,25 @@ namespace Lidgren.Network
 
 			PropertyInfo[] fields = tp.GetProperties(flags);
 			NetUtility.SortMembersList(fields);
-		    for (int i = 0; i < fields.Length; i++) {
-		        PropertyInfo fi = fields[i];
-		        object value;
 
-		        // find read method
-		        MethodInfo readMethod;
-		        if (s_readMethods.TryGetValue(fi.PropertyType, out readMethod)) {
-		            // read value
-		            value = readMethod.Invoke(this, null);
+			for (int i = 0; i < fields.Length; i++) {
+			{
+				PropertyInfo fi = fields[i];
+				object value;
 
-		            // set the value
-#if UNITY_WEBPLAYER || UNITY_4_5
-		            var setMethod = fi.GetSetMethod();
-#else
-					var setMethod = fi.SetMethod;
-#endif
-		            if (setMethod != null) {
-		                setMethod.Invoke(target, new object[] {value});
-		            }
-		        }
-		    }
+				// find read method
+				MethodInfo readMethod;
+				if (s_readMethods.TryGetValue(fi.PropertyType, out readMethod))
+				{
+					// read value
+					value = readMethod.Invoke(this, null);
+
+					// set the value
+					var setMethod = fi.GetSetMethod();
+					if (setMethod != null)
+						setMethod.Invoke(target, new object[] { value });
+				}
+			}
 		}
 	}
 }

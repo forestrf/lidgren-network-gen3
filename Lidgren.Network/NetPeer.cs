@@ -180,15 +180,24 @@ namespace Lidgren.Network
 		/// <summary>
 		/// Read a pending message from any connection, blocking up to maxMillis if needed
 		/// </summary>
-		public NetIncomingMessage WaitMessage(int maxMillis)
-		{
-			var msg = ReadMessage();
-			if (msg != null)
-				return msg; // no need to wait; we already have a message to deliver
-			var msgEvt = MessageReceivedEvent;
-			msgEvt.WaitOne(maxMillis);
-			return ReadMessage();
-		}
+	        public NetIncomingMessage WaitMessage(int maxMillis)
+	        {
+	            NetIncomingMessage msg = ReadMessage();
+	
+	            while (msg == null)
+	            {
+	                // This could return true...
+	                if (!MessageReceivedEvent.WaitOne(maxMillis))
+	                {
+	                    return null;
+	                }
+	
+	                // ... while this will still returns null. That's why we need to cycle.
+	                msg = ReadMessage();
+	            }
+	
+	            return msg;
+        	}
 
 		/// <summary>
 		/// Read a pending message from any connection, if any
@@ -244,12 +253,20 @@ namespace Lidgren.Network
 			Recycle(msg);
 		}
 
+		static NetEndPoint GetNetEndPoint(string host, int port)
+		{
+			IPAddress address = NetUtility.Resolve(host);
+			if (address == null)
+				throw new NetException("Could not resolve host");
+			return new NetEndPoint(address, port);
+		}
+
 		/// <summary>
 		/// Create a connection to a remote endpoint
 		/// </summary>
 		public NetConnection Connect(string host, int port)
 		{
-			return Connect(new NetEndPoint(NetUtility.Resolve(host), port), null);
+			return Connect(GetNetEndPoint(host, port), null);
 		}
 
 		/// <summary>
@@ -257,7 +274,7 @@ namespace Lidgren.Network
 		/// </summary>
 		public NetConnection Connect(string host, int port, NetOutgoingMessage hailMessage)
 		{
-			return Connect(new NetEndPoint(NetUtility.Resolve(host), port), hailMessage);
+			return Connect(GetNetEndPoint(host, port), hailMessage);
 		}
 
 		/// <summary>

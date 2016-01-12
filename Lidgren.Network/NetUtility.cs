@@ -38,6 +38,8 @@ namespace Lidgren.Network
 	/// </summary>
 	public static partial class NetUtility
 	{
+		private static readonly bool IsMono = Type.GetType("Mono.Runtime") != null;
+
 		/// <summary>
 		/// Resolve endpoint callback
 		/// </summary>
@@ -72,7 +74,7 @@ namespace Lidgren.Network
 		public static NetEndPoint Resolve(string ipOrHost, int port)
 		{
 			var adr = Resolve(ipOrHost);
-			return new NetEndPoint(adr, port);
+			return adr == null ? null : new NetEndPoint(adr, port);
 		}
 
 		private static IPAddress s_broadcastAddress;
@@ -273,6 +275,18 @@ namespace Lidgren.Network
 		/// </summary>
 		[CLSCompliant(false)]
 		public static int BitsToHoldUInt(uint value)
+		{
+			int bits = 1;
+			while ((value >>= 1) != 0)
+				bits++;
+			return bits;
+		}
+
+		/// <summary>
+		/// Returns how many bits are necessary to hold a certain number
+		/// </summary>
+		[CLSCompliant(false)]
+		public static int BitsToHoldUInt64(ulong value)
 		{
 			int bits = 1;
 			while ((value >>= 1) != 0)

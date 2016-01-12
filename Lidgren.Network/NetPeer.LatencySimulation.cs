@@ -109,15 +109,15 @@ namespace Lidgren.Network
 			bool connectionReset;
 
 		RestartDelaySending:
-			foreach (DelayedPacket p in m_delayedPackets)
-			{
-				if (now > p.DelayedUntil)
-				{
-					ActuallySendPacket(p.Data, p.Data.Length, p.Target, out connectionReset);
-					m_delayedPackets.Remove(p);
-					goto RestartDelaySending;
-				}
-			}
+		    for (int i = 0; i < m_delayedPackets.Count; i++) 
+            {
+		        DelayedPacket p = m_delayedPackets[i];
+		        if (now > p.DelayedUntil) {
+		            ActuallySendPacket(p.Data, p.Data.Length, p.Target, out connectionReset);
+		            m_delayedPackets.Remove(p);
+		            goto RestartDelaySending;
+		        }
+		    }
 		}
 
 		private void FlushDelayedPackets()
@@ -125,9 +125,12 @@ namespace Lidgren.Network
 			try
 			{
 				bool connectionReset;
-				foreach (DelayedPacket p in m_delayedPackets)
-					ActuallySendPacket(p.Data, p.Data.Length, p.Target, out connectionReset);
-				m_delayedPackets.Clear();
+			    for (int i = 0; i < m_delayedPackets.Count; i++) 
+                {
+			        DelayedPacket p = m_delayedPackets[i];
+			        ActuallySendPacket(p.Data, p.Data.Length, p.Target, out connectionReset);
+			    }
+			    m_delayedPackets.Clear();
 			}
 			catch { }
 		}

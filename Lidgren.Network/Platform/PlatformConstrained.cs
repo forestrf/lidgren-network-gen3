@@ -1,7 +1,8 @@
-﻿#if __CONSTRAINED__ || UNITY_STANDALONE_LINUX || UNITY
+﻿#if __CONSTRAINED__ || UNITY
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Sockets;
 using System.Security.Cryptography;
 
 namespace Lidgren.Network
@@ -29,9 +30,9 @@ namespace Lidgren.Network
 		public static IPAddress GetMyAddress(out IPAddress mask)
 		{
 			mask = null;
+#if UNITY
 			try
 			{
-#if UNITY_ANDROID || UNITY_STANDALONE_OSX || UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX || UNITY_IOS || UNITY
 				if (!(UnityEngine.Application.internetReachability == UnityEngine.NetworkReachability.NotReachable))
 				{
 					return null;
@@ -42,8 +43,16 @@ namespace Lidgren.Network
 			{
 				return null;
 			}
-#endif
+#else
+			var host = Dns.GetHostEntry(Dns.GetHostName());
+			for (int i = 0; i < host.AddressList.Length; i++) {
+				IPAddress ip = host.AddressList[i];
+				if (ip.AddressFamily == AddressFamily.InterNetwork) {
+					return ip;
+				}
+			}
 			return null;
+#endif
 		}
 
 		public static byte[] GetMacAddressBytes()

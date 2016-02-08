@@ -56,10 +56,10 @@ namespace Lidgren.Network
 		/// <summary>
 		/// Gets or sets the read position in the buffer, in bits (not bytes)
 		/// </summary>
-		public long Position
+		public int Position
 		{
-			get { return (long)m_readPosition; }
-			set { m_readPosition = (int)value; }
+			get { return m_readPosition; }
+			set { m_readPosition = value; }
 		}
 
 		/// <summary>

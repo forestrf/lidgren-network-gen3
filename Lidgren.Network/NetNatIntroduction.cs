@@ -98,8 +98,7 @@ namespace Lidgren.Network
 			string token = tmp.ReadString();
 			if (isFromClient)
 			{
-				LogDebug("NAT punch received from " + senderEndPoint +
-								 " we're host, so we send a NatIntroductionConfirmed message - token is " + token);
+				LogDebug("NAT punch received from " + senderEndPoint + " we're host, so we send a NatIntroductionConfirmed message - token is " + token);
 
 				var confirmResponse = CreateMessage(1);
 				confirmResponse.m_messageType = NetMessageType.NatIntroductionConfirmed;
@@ -110,8 +109,7 @@ namespace Lidgren.Network
 			}
 			else
 			{
-				LogDebug("NAT punch received from " + senderEndPoint +
-								" we're client, so we send a NatIntroductionConfirmRequest - token is " + token);
+				LogDebug("NAT punch received from " + senderEndPoint + " we're client, so we send a NatIntroductionConfirmRequest - token is " + token);
 
 				var confirmRequest = CreateMessage(1);
 				confirmRequest.m_messageType = NetMessageType.NatIntroductionConfirmRequest;
@@ -145,9 +143,12 @@ namespace Lidgren.Network
 			if (isFromClient)
 			{
 				LogDebug("NAT punch confirmation received from " + senderEndPoint + " we're host, so we ignore this");
+				return;
 			}
 
 			string token = tmp.ReadString();
+
+			LogDebug("NAT punch confirmation received from " + senderEndPoint + " we're client so we go ahead and succeed the introduction");
 
 			//
 			// Release punch success to client; enabling him to Connect() to msg.Sender if token is ok

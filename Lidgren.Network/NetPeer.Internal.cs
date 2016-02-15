@@ -440,9 +440,9 @@ namespace Lidgren.Network
 				if (bytesReceived < NetConstants.HeaderByteSize)
 					return;
 
-				//LogVerbose("Received " + bytesReceived + " bytes");
-
 				var ipsender = (NetEndPoint)m_senderRemote;
+
+                LogVerbose("Received " + bytesReceived + " bytes from " + ipsender);
 
 				if (m_upnp != null && now < m_upnp.m_discoveryResponseDeadline && bytesReceived > 32)
 				{

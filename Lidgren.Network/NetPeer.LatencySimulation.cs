@@ -96,7 +96,7 @@ namespace Lidgren.Network
 				m_delayedPackets.Add(p);
 			}
 
-			// LogVerbose("Sending packet " + numBytes + " bytes - delayed " + NetTime.ToReadable(delay));
+			//LogVerbose("Sending packet " + numBytes + " bytes - delayed " + NetTime.ToReadable(delay) + " to " + target);
 		}
 
 		private void SendDelayedPackets()
@@ -157,7 +157,7 @@ namespace Lidgren.Network
 				if (numBytes != bytesSent)
 					LogWarning("Failed to send the full " + numBytes + "; only " + bytesSent + " bytes sent in packet!");
 
-				// LogDebug("Sent " + numBytes + " bytes");
+				LogDebug("Sent " + numBytes + " bytes to " + target);
 			}
 			catch (SocketException sx)
 			{

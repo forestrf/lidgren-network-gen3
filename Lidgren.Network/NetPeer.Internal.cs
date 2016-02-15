@@ -637,6 +637,14 @@ namespace Lidgren.Network
 					if (m_configuration.IsMessageTypeEnabled(NetIncomingMessageType.NatIntroductionSuccess))
 						HandleNatPunch(ptr, senderEndPoint);
 					return;
+				case NetMessageType.NatIntroductionConfirmRequest:
+					if (m_configuration.IsMessageTypeEnabled(NetIncomingMessageType.NatIntroductionSuccess))
+						HandleNatPunchConfirmRequest(ptr, senderEndPoint);
+					return;
+				case NetMessageType.NatIntroductionConfirmed:
+					if (m_configuration.IsMessageTypeEnabled(NetIncomingMessageType.NatIntroductionSuccess))
+						HandleNatPunchConfirmed(ptr, senderEndPoint);
+					return;
 				case NetMessageType.ConnectResponse:
 
 					lock (m_handshakes)

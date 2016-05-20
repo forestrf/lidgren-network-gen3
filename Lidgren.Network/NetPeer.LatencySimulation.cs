@@ -96,7 +96,7 @@ namespace Lidgren.Network
 				m_delayedPackets.Add(p);
 			}
 
-			// LogVerbose("Sending packet " + numBytes + " bytes - delayed " + NetTime.ToReadable(delay));
+			//LogVerbose("Sending packet " + numBytes + " bytes - delayed " + NetTime.ToReadable(delay) + " to " + target);
 		}
 
 		private void SendDelayedPackets()
@@ -109,8 +109,9 @@ namespace Lidgren.Network
 			bool connectionReset;
 
 		RestartDelaySending:
-			foreach (DelayedPacket p in m_delayedPackets)
+			for (int i = 0; i < m_delayedPackets.Count; i++) 
 			{
+				DelayedPacket p = m_delayedPackets[i];
 				if (now > p.DelayedUntil)
 				{
 					ActuallySendPacket(p.Data, p.Data.Length, p.Target, out connectionReset);
@@ -125,8 +126,11 @@ namespace Lidgren.Network
 			try
 			{
 				bool connectionReset;
-				foreach (DelayedPacket p in m_delayedPackets)
+				for (int i = 0; i < m_delayedPackets.Count; i++) 
+				{
+					DelayedPacket p = m_delayedPackets[i];
 					ActuallySendPacket(p.Data, p.Data.Length, p.Target, out connectionReset);
+				}
 				m_delayedPackets.Clear();
 			}
 			catch { }
@@ -145,7 +149,7 @@ namespace Lidgren.Network
 				{
 					// Some networks do not allow 
 					// a global broadcast so we use the BroadcastAddress from the configuration
-					// this can be resolved to a local broadcast addresss e.g 192.168.x.255                    
+					// this can be resolved to a local broadcast addresss e.g 192.168.x.255
 					target.Address = m_configuration.BroadcastAddress;
 					m_socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, true);
 				}
@@ -154,7 +158,7 @@ namespace Lidgren.Network
 				if (numBytes != bytesSent)
 					LogWarning("Failed to send the full " + numBytes + "; only " + bytesSent + " bytes sent in packet!");
 
-				// LogDebug("Sent " + numBytes + " bytes");
+				LogDebug("Sent " + numBytes + " bytes to " + target);
 			}
 			catch (SocketException sx)
 			{

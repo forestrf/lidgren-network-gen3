@@ -44,8 +44,9 @@ namespace Lidgren.Network
 			FieldInfo[] fields = tp.GetFields(flags);
 			NetUtility.SortMembersList(fields);
 
-			foreach (FieldInfo fi in fields)
+			for (int i = 0; i < fields.Length; i++)
 			{
+				FieldInfo fi = fields[i];
 				object value;
 
 				// find read method
@@ -81,8 +82,10 @@ namespace Lidgren.Network
 
 			PropertyInfo[] fields = tp.GetProperties(flags);
 			NetUtility.SortMembersList(fields);
-			foreach (PropertyInfo fi in fields)
+
+			for (int i = 0; i < fields.Length; i++)
 			{
+				PropertyInfo fi = fields[i];
 				object value;
 
 				// find read method

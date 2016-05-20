@@ -127,8 +127,9 @@ namespace Lidgren.Network
 			if (len <= mtu)
 			{
 				Interlocked.Add(ref msg.m_recyclingCount, recipients.Count);
-				foreach (NetConnection conn in recipients)
+				for (int i = 0; i < recipients.Count; i++)
 				{
+					NetConnection conn = recipients[i];
 					if (conn == null)
 					{
 						Interlocked.Decrement(ref msg.m_recyclingCount);
@@ -214,8 +215,8 @@ namespace Lidgren.Network
 			msg.m_isSent = true;
 
 			Interlocked.Add(ref msg.m_recyclingCount, recipients.Count);
-			foreach (NetEndPoint ep in recipients)
-				m_unsentUnconnectedMessages.Enqueue(new NetTuple<NetEndPoint, NetOutgoingMessage>(ep, msg));
+			for (int i = 0; i < recipients.Count; i++)
+				m_unsentUnconnectedMessages.Enqueue(new NetTuple<NetEndPoint, NetOutgoingMessage>(recipients[i], msg));
 		}
 
 		/// <summary>

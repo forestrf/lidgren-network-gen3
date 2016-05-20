@@ -69,7 +69,7 @@ namespace Lidgren.Network
 				return;
 
 			// remove all callbacks regardless of sync context
-            m_receiveCallbacks.RemoveAll(tuple => tuple.Item2.Equals(callback));
+			m_receiveCallbacks.RemoveAll(tuple => tuple.Item2.Equals(callback));
 
 			if (m_receiveCallbacks.Count < 1)
 				m_receiveCallbacks = null;
@@ -92,8 +92,8 @@ namespace Lidgren.Network
 
 			if (m_receiveCallbacks != null)
 			{
-				foreach (var tuple in m_receiveCallbacks)
-				{
+				for (int i = 0; i < m_receiveCallbacks.Count; i++) {
+					var tuple = m_receiveCallbacks[i];
 					try
 					{
 						tuple.Item1.Post(tuple.Item2, this);
@@ -222,21 +222,32 @@ namespace Lidgren.Network
 			var list = new List<NetConnection>(m_handshakes.Count + m_connections.Count);
 			lock (m_connections)
 			{
-				foreach (var conn in m_connections)
-					if (conn != null)
-						list.Add(conn);
+				for (int i = 0; i < m_connections.Count; i++)
+				{
+						var conn = m_connections[i];
+						if (conn != null)
+						{
+								list.Add(conn);
+						}
+				}
 			}
 
 			lock (m_handshakes)
 			{
 				foreach (var hs in m_handshakes.Values)
-					if (hs != null && list.Contains(hs) == false)
-						list.Add(hs);
+				{
+						if (hs != null && list.Contains(hs) == false)
+						{
+							list.Add(hs);
+						}
+				}
 			}
 
 			// shut down connections
-			foreach (NetConnection conn in list)
-				conn.Shutdown(m_shutdownReason);
+			for (int i = 0; i < list.Count; i++) {
+					NetConnection conn = list[i];
+					conn.Shutdown(m_shutdownReason);
+			}
 
 			FlushDelayedPackets();
 
@@ -382,8 +393,8 @@ namespace Lidgren.Network
 				}
 			}
 
-            if (m_upnp != null)
-                m_upnp.CheckForDiscoveryTimeout();
+			if (m_upnp != null)
+				m_upnp.CheckForDiscoveryTimeout();
 
 			//
 			// read from socket
@@ -432,9 +443,9 @@ namespace Lidgren.Network
 				if (bytesReceived < NetConstants.HeaderByteSize)
 					return;
 
-				//LogVerbose("Received " + bytesReceived + " bytes");
-
 				var ipsender = (NetEndPoint)m_senderRemote;
+
+				LogVerbose("Received " + bytesReceived + " bytes from " + ipsender);
 
 				if (m_upnp != null && now < m_upnp.m_discoveryResponseDeadline && bytesReceived > 32)
 				{

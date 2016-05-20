@@ -112,13 +112,14 @@ namespace Lidgren.Network
 		/// <summary>
 		/// Adds an item last/tail of the queue
 		/// </summary>
-		public void Enqueue(IEnumerable<T> items)
+		public void Enqueue(IList<T> items)
 		{
 			m_lock.EnterWriteLock();
 			try
 			{
-				foreach (var item in items)
+				for (int i = 0; i < items.Count; i++)
 				{
+					var item = items[i];
 					if (m_size == m_items.Length)
 						SetCapacity(m_items.Length + 8); // @TODO move this out of loop
 

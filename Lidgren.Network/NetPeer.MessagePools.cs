@@ -186,12 +186,12 @@ namespace Lidgren.Network
 		/// <summary>
 		/// Recycles a list of NetIncomingMessage instances for reuse; taking pressure off the garbage collector
 		/// </summary>
-		public void Recycle(IEnumerable<NetIncomingMessage> toRecycle)
+		public void Recycle(IList<NetIncomingMessage> toRecycle)
 		{
 			if (m_incomingMessagesPool == null)
 				return;
-			foreach (var im in toRecycle)
-				Recycle(im);
+			for (int i = 0; i < toRecycle.Count; i++)
+				Recycle(toRecycle[i]);
 		}
 
 		internal void Recycle(NetOutgoingMessage msg)

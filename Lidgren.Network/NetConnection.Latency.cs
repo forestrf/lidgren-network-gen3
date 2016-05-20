@@ -118,8 +118,9 @@ namespace Lidgren.Network
 
 			// update resend delay for all channels
 			double resendDelay = GetResendDelay();
-			foreach (var chan in m_sendChannels)
+			for (int i = 0; i < m_sendChannels.Length; i++)
 			{
+				var chan = m_sendChannels[i];
 				var rchan = chan as NetReliableSenderChannel;
 				if (rchan != null)
 					rchan.m_resendDelay = resendDelay;

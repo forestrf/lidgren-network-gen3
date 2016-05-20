@@ -64,8 +64,9 @@ namespace Lidgren.Network
 
 				Interlocked.Add(ref chunk.m_recyclingCount, recipients.Count);
 
-				foreach (NetConnection recipient in recipients)
+				for (int j = 0; j < recipients.Count; j++)
 				{
+					NetConnection recipient = recipients[j];
 					var res = recipient.EnqueueMessage(chunk, method, sequenceChannel);
 					if (res == NetSendResult.Dropped)
 						Interlocked.Decrement(ref chunk.m_recyclingCount);

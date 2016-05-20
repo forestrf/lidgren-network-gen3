@@ -57,9 +57,11 @@ namespace Lidgren.Network
 			}
 
 			List<NetConnection> recipients = new List<NetConnection>(all.Count - 1);
-			foreach (var conn in all)
+			for (int i = 0; i < all.Count; i++) {
+				var conn = all[i];
 				if (conn != except)
 					recipients.Add(conn);
+			}
 
 			if (recipients.Count > 0)
 				SendMessage(msg, recipients, method, sequenceChannel);

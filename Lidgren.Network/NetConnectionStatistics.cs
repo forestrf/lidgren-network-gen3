@@ -93,25 +93,25 @@ namespace Lidgren.Network
 		/// </summary>
 		public long ReceivedBytes { get { return m_receivedBytes; } }
 
-        /// <summary>
-        /// Gets the number of sent messages for this connection
-        /// </summary>
-        public long SentMessages { get { return m_sentMessages; } }
+		/// <summary>
+		/// Gets the number of sent messages for this connection
+		/// </summary>
+		public long SentMessages { get { return m_sentMessages; } }
 
-        /// <summary>
-        /// Gets the number of received messages for this connection
-        /// </summary>
-        public long ReceivedMessages { get { return m_receivedMessages; } }
+		/// <summary>
+		/// Gets the number of received messages for this connection
+		/// </summary>
+		public long ReceivedMessages { get { return m_receivedMessages; } }
 
 		/// <summary>
 		/// Gets the number of resent reliable messages for this connection
 		/// </summary>
 		public long ResentMessages { get { return m_resentMessagesDueToHole + m_resentMessagesDueToDelay; } }
 
-        /// <summary>
-        /// Gets the number of dropped messages for this connection
-        /// </summary>
-        public long DroppedMessages { get { return m_droppedMessages; } }
+		/// <summary>
+		/// Gets the number of dropped messages for this connection
+		/// </summary>
+		public long DroppedMessages { get { return m_droppedMessages; } }
 
 		// public double LastSendRespondedTo { get { return m_connection.m_lastSendRespondedTo; } }
 
@@ -176,30 +176,33 @@ namespace Lidgren.Network
 
 			int numUnsent = 0;
 			int numStored = 0;
-			foreach (NetSenderChannelBase sendChan in m_connection.m_sendChannels)
-			{
-				if (sendChan == null)
+			for (int i = 0; i < m_connection.m_sendChannels.Length; i++) {
+				NetSenderChannelBase sendChan = m_connection.m_sendChannels[i];
+				if (sendChan == null) {
 					continue;
+				}
 				numUnsent += sendChan.QueuedSendsCount;
 
 				var relSendChan = sendChan as NetReliableSenderChannel;
-				if (relSendChan != null)
-				{
-					for (int i = 0; i < relSendChan.m_storedMessages.Length; i++)
-						if (relSendChan.m_storedMessages[i].Message != null)
+				if (relSendChan != null) {
+					for (int j = 0; j < relSendChan.m_storedMessages.Length; j++) {
+						if (relSendChan.m_storedMessages[j].Message != null) {
 							numStored++;
+						}
+					}
 				}
 			}
 
 			int numWithheld = 0;
-			foreach (NetReceiverChannelBase recChan in m_connection.m_receiveChannels)
-			{
+			for (int i = 0; i < m_connection.m_receiveChannels.Length; i++) {
+				NetReceiverChannelBase recChan = m_connection.m_receiveChannels[i];
 				var relRecChan = recChan as NetReliableOrderedReceiver;
-				if (relRecChan != null)
-				{
-					for (int i = 0; i < relRecChan.m_withheldMessages.Length; i++)
-						if (relRecChan.m_withheldMessages[i] != null)
+				if (relRecChan != null) {
+					for (int j = 0; j < relRecChan.m_withheldMessages.Length; j++) {
+						if (relRecChan.m_withheldMessages[j] != null) {
 							numWithheld++;
+						}
+					}
 				}
 			}
 

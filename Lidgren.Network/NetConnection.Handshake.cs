@@ -17,7 +17,7 @@ namespace Lidgren.Network
 		internal string m_disconnectMessage;
 		internal bool m_connectionInitiator;
 		internal NetIncomingMessage m_remoteHailMessage;
-		internal double m_lastHandshakeSendTime;
+		internal float m_lastHandshakeSendTime;
 		internal int m_handshakeAttempts;
 
 		/// <summary>
@@ -26,7 +26,7 @@ namespace Lidgren.Network
 		public NetIncomingMessage RemoteHailMessage { get { return m_remoteHailMessage; } }
 
 		// heartbeat called when connection still is in m_handshakes of NetPeer
-		internal void UnconnectedHeartbeat(double now)
+		internal void UnconnectedHeartbeat(float now)
 		{
 			m_peer.VerifyNetworkThread();
 
@@ -129,7 +129,7 @@ namespace Lidgren.Network
 			m_handshakeAttempts = 0;
 		}
 
-		internal void SendConnect(double now)
+		internal void SendConnect(float now)
 		{
 			m_peer.VerifyNetworkThread();
 
@@ -155,7 +155,7 @@ namespace Lidgren.Network
 			SetStatus(NetConnectionStatus.InitiatedConnect, "Locally requested connect");
 		}
 
-		internal void SendConnectResponse(double now, bool onLibraryThread)
+		internal void SendConnectResponse(float now, bool onLibraryThread)
 		{
 			if (onLibraryThread)
 				m_peer.VerifyNetworkThread();
@@ -164,7 +164,7 @@ namespace Lidgren.Network
 			om.m_messageType = NetMessageType.ConnectResponse;
 			om.Write(m_peerConfiguration.AppIdentifier);
 			om.Write(m_peer.m_uniqueIdentifier);
-			om.Write((float)now);
+			om.Write(now);
 			Interlocked.Increment(ref om.m_recyclingCount);
 			WriteLocalHail(om);
 
@@ -279,7 +279,7 @@ namespace Lidgren.Network
 				m_peer.m_handshakes.Remove(m_remoteEndPoint);
 		}
 
-		internal void ReceivedHandshake(double now, NetMessageType tp, int ptr, int payloadLength)
+		internal void ReceivedHandshake(float now, NetMessageType tp, int ptr, int payloadLength)
 		{
 			m_peer.VerifyNetworkThread();
 
@@ -317,7 +317,7 @@ namespace Lidgren.Network
 								return;
 							}
 
-							SendConnectResponse((float)now, true);
+							SendConnectResponse(now, true);
 						}
 						return;
 					}
@@ -329,7 +329,7 @@ namespace Lidgren.Network
 					if (m_status == NetConnectionStatus.RespondedConnect)
 					{
 						// our ConnectResponse must have been lost
-						SendConnectResponse((float)now, true);
+						SendConnectResponse(now, true);
 						return;
 					}
 					m_peer.LogDebug("Unhandled Connect: " + tp + ", status is " + m_status + " length: " + payloadLength);
@@ -400,7 +400,7 @@ namespace Lidgren.Network
 			}
 		}
 
-		private void HandleConnectResponse(double now, NetMessageType tp, int ptr, int payloadLength)
+		private void HandleConnectResponse(float now, NetMessageType tp, int ptr, int payloadLength)
 		{
 			byte[] hail;
 			switch (m_status)

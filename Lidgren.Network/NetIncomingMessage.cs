@@ -38,14 +38,14 @@ namespace Lidgren.Network
 		internal int m_sequenceNumber;
 		internal NetMessageType m_receivedMessageType;
 		internal bool m_isFragment;
-		internal double m_receiveTime;
+		internal float m_receiveTime;
 
 		float userMsgTime = float.NaN;
 
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		public NetIncomingMessage(NetIncomingMessageType msgType, double rTime) {
+		public NetIncomingMessage(NetIncomingMessageType msgType, float rTime) {
 			m_incomingMessageType = msgType;
 			m_receiveTime = rTime;
 		}
@@ -97,7 +97,7 @@ namespace Lidgren.Network
 		/// <summary>
 		/// What local time the message was received from the network
 		/// </summary>
-		public double ReceiveTime { get { return m_receiveTime; } }
+		public float ReceiveTime { get { return m_receiveTime; } }
 
 		internal NetIncomingMessage()
 		{

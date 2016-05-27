@@ -108,7 +108,7 @@ namespace Lidgren.Network
 			m_remoteEndPoint = endPoint;
 		}
 
-		internal void ResetTimeout(double now)
+		internal void ResetTimeout(float now)
 		{
 			m_timeoutDeadline = now + m_peerConfiguration.m_connectionTimeout;
 		}
@@ -148,7 +148,7 @@ namespace Lidgren.Network
 			}
 		}
 
-		internal void Heartbeat(double now, uint frameCounter)
+		internal void Heartbeat(float now, uint frameCounter)
 		{
 			m_peer.VerifyNetworkThread();
 
@@ -412,7 +412,7 @@ namespace Lidgren.Network
 		{
 			m_peer.VerifyNetworkThread();
 
-			double now = NetTime.Now;
+			float now = NetTime.Now;
 
 			switch (tp)
 			{

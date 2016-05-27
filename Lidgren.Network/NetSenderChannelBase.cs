@@ -21,8 +21,8 @@ namespace Lidgren.Network
 		}
 
 		internal abstract NetSendResult Enqueue(NetOutgoingMessage message);
-		internal abstract void SendQueuedMessages(double now);
+		internal abstract void SendQueuedMessages(float now);
 		internal abstract void Reset();
-		internal abstract void ReceiveAcknowledge(double now, int sequenceNumber);
+		internal abstract void ReceiveAcknowledge(float now, int sequenceNumber);
 	}
 }

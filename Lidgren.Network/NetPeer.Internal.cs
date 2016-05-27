@@ -23,8 +23,8 @@ namespace Lidgren.Network
 		private EndPoint m_senderRemote;
 		private object m_initializeLock = new object();
 		private uint m_frameCounter;
-		private double m_lastHeartbeat;
-		private double m_lastSocketBind = float.MinValue;
+		private float m_lastHeartbeat;
+		private float m_lastSocketBind = float.MinValue;
 		private NetUPnP m_upnp;
 		internal bool m_needFlushSendQueue;
 
@@ -108,7 +108,7 @@ namespace Lidgren.Network
 
 		private void BindSocket(bool reBind)
 		{
-			double now = NetTime.Now;
+			float now = NetTime.Now;
 			if (now - m_lastSocketBind < 1.0)
 			{
 				LogDebug("Suppressed socket rebind; last bound " + (now - m_lastSocketBind) + " seconds ago");
@@ -308,8 +308,8 @@ namespace Lidgren.Network
 		{
 			VerifyNetworkThread();
 
-			double now = NetTime.Now;
-			double delta = now - m_lastHeartbeat;
+			float now = NetTime.Now;
+			float delta = now - m_lastHeartbeat;
 
 			int maxCHBpS = 1250 - m_connections.Count;
 			if (maxCHBpS < 250)
@@ -584,7 +584,7 @@ namespace Lidgren.Network
 			m_executeFlushSendQueue = true;
 		}
 
-		internal void HandleIncomingDiscoveryRequest(double now, NetEndPoint senderEndPoint, int ptr, int payloadByteLength)
+		internal void HandleIncomingDiscoveryRequest(float now, NetEndPoint senderEndPoint, int ptr, int payloadByteLength)
 		{
 			if (m_configuration.IsMessageTypeEnabled(NetIncomingMessageType.DiscoveryRequest))
 			{
@@ -598,7 +598,7 @@ namespace Lidgren.Network
 			}
 		}
 
-		internal void HandleIncomingDiscoveryResponse(double now, NetEndPoint senderEndPoint, int ptr, int payloadByteLength)
+		internal void HandleIncomingDiscoveryResponse(float now, NetEndPoint senderEndPoint, int ptr, int payloadByteLength)
 		{
 			if (m_configuration.IsMessageTypeEnabled(NetIncomingMessageType.DiscoveryResponse))
 			{
@@ -612,7 +612,7 @@ namespace Lidgren.Network
 			}
 		}
 
-		private void ReceivedUnconnectedLibraryMessage(double now, NetEndPoint senderEndPoint, NetMessageType tp, int ptr, int payloadByteLength)
+		private void ReceivedUnconnectedLibraryMessage(float now, NetEndPoint senderEndPoint, NetMessageType tp, int ptr, int payloadByteLength)
 		{
 			NetConnection shake;
 			if (m_handshakes.TryGetValue(senderEndPoint, out shake))

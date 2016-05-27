@@ -44,8 +44,6 @@ namespace Lidgren.Network
 		internal int m_fragmentChunkByteSize;	  // size, in bytes, of every chunk but the last one
 		internal int m_fragmentChunkNumber;       // which number chunk this is, starting with 0
 
-		public object extraData;                  // used by the user, if needed
-
 		/// <summary>
 		/// Create a copy of this Message
 		/// </summary>
@@ -73,7 +71,6 @@ namespace Lidgren.Network
 			m_isSent = false;
 			NetException.Assert(m_recyclingCount == 0);
 			m_fragmentGroup = 0;
-			extraData = null;
 		}
 
 		internal int Encode(byte[] intoBuffer, int ptr, int sequenceNumber)

@@ -40,8 +40,6 @@ namespace Lidgren.Network
 		internal bool m_isFragment;
 		internal double m_receiveTime;
 
-		public object extraData;                  // used by the user, if needed
-
 		/// <summary>
 		/// Constructor
 		/// </summary>
@@ -115,7 +113,6 @@ namespace Lidgren.Network
 			m_senderConnection = null;
 			m_bitLength = 0;
 			m_isFragment = false;
-			extraData = null;
 		}
 
 		/// <summary>

@@ -36,7 +36,8 @@ namespace Lidgren.Network
 		/// </summary>
 		public static byte ReadByte(byte[] fromBuffer, int numberOfBits, int readBitOffset)
 		{
-			NetException.Assert(((numberOfBits > 0) && (numberOfBits < 9)), "Read() can only read between 1 and 8 bits");
+			if (numberOfBits < 1 || numberOfBits > 8)
+				throw new NetException("Read() can only read between 1 and 8 bits");
 
 			int bytePtr = readBitOffset >> 3;
 			int startReadAtIndex = readBitOffset - (bytePtr * 8); // (readBitOffset % 8);
@@ -105,7 +106,8 @@ namespace Lidgren.Network
 			if (numberOfBits == 0)
 				return;
 
-			NetException.Assert(((numberOfBits >= 0) && (numberOfBits <= 8)), "Must write between 0 and 8 bits!");
+			if (numberOfBits < 0 || numberOfBits > 8)
+				throw new NetException("Must write between 0 and 8 bits!");
 
 			// Mask out all the bits we dont want
 			source = (byte)(source & (0xFF >> (8 - numberOfBits)));
@@ -250,7 +252,8 @@ namespace Lidgren.Network
 		
 		public static uint ReadUInt32(byte[] fromBuffer, int numberOfBits, int readBitOffset)
 		{
-			NetException.Assert(((numberOfBits > 0) && (numberOfBits <= 32)), "ReadUInt32() can only read between 1 and 32 bits");
+			if (numberOfBits < 1 || numberOfBits > 32)
+				throw new NetException("ReadUInt32() can only read between 1 and 32 bits");
 #endif
 			uint returnValue;
 			if (numberOfBits <= 8)
@@ -308,7 +311,8 @@ namespace Lidgren.Network
 			if (numberOfBits == 0)
 				return;
 
-			NetException.Assert((numberOfBits >= 0 && numberOfBits <= 16), "numberOfBits must be between 0 and 16");
+			if (numberOfBits < 0 || numberOfBits > 16)
+				throw new NetException("numberOfBits must be between 0 and 16");
 #if BIGENDIAN
 			// reorder bytes
 			uint intSource = source;
@@ -500,7 +504,8 @@ namespace Lidgren.Network
 			int num2 = 0;
 			while (true)
 			{
-				NetException.Assert(num2 != 0x23, "Bad 7-bit encoded integer");
+				if (num2 == 0x23)
+					throw new NetException("Bad 7-bit encoded integer");
 
 				byte num3 = buffer[offset++];
 				num1 |= (num3 & 0x7f) << (num2 & 0x1f);

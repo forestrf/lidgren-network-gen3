@@ -38,13 +38,11 @@ namespace Lidgren.Network
 			if (sequenceChannel >= NetConstants.NetChannelsPerDeliveryMethod)
 				throw new ArgumentOutOfRangeException("sequenceChannel");
 
-			NetException.Assert(
-				((method != NetDeliveryMethod.Unreliable && method != NetDeliveryMethod.ReliableUnordered) ||
-				((method == NetDeliveryMethod.Unreliable || method == NetDeliveryMethod.ReliableUnordered) && sequenceChannel == 0)),
-				"Delivery method " + method + " cannot use sequence channels other than 0!"
-			);
+			if ((method == NetDeliveryMethod.Unreliable || method == NetDeliveryMethod.ReliableUnordered) && sequenceChannel != 0)
+				throw new NetException("Delivery method " + method + " cannot use sequence channels other than 0!");
 
-			NetException.Assert(method != NetDeliveryMethod.Unknown, "Bad delivery method!");
+			if (method == NetDeliveryMethod.Unknown)
+				throw new NetException("Bad delivery method!");
 
 			if (msg.m_isSent)
 				throw new NetException("This message has already been sent! Use NetPeer.SendMessage() to send to multiple recipients efficiently");
@@ -116,7 +114,8 @@ namespace Lidgren.Network
 				throw new NetException("recipients must contain at least one item");
 			}
 			if (method == NetDeliveryMethod.Unreliable || method == NetDeliveryMethod.ReliableUnordered)
-				NetException.Assert(sequenceChannel == 0, "Delivery method " + method + " cannot use sequence channels other than 0!");
+				if (sequenceChannel != 0)
+					throw new NetException("Delivery method " + method + " cannot use sequence channels other than 0!");
 			if (msg.m_isSent)
 				throw new NetException("This message has already been sent! Use NetPeer.SendMessage() to send to multiple recipients efficiently");
 			msg.m_isSent = true;

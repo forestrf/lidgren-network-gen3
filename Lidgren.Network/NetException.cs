@@ -55,16 +55,6 @@ namespace Lidgren.Network
 		/// Throws an exception, in DEBUG only, if first parameter is false
 		/// </summary>
 		[Conditional("DEBUG")]
-		public static void Assert(bool isOk, string message)
-		{
-			if (!isOk)
-				throw new NetException(message);
-		}
-
-		/// <summary>
-		/// Throws an exception, in DEBUG only, if first parameter is false
-		/// </summary>
-		[Conditional("DEBUG")]
 		public static void Assert(bool isOk)
 		{
 			if (!isOk)

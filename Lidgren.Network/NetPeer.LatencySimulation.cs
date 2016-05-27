@@ -158,7 +158,7 @@ namespace Lidgren.Network
 				if (numBytes != bytesSent)
 					LogWarning("Failed to send the full " + numBytes + "; only " + bytesSent + " bytes sent in packet!");
 
-				LogDebug("Sent " + numBytes + " bytes to " + target);
+				LogVerbose("Sent " + numBytes + " bytes to " + target);
 			}
 			catch (SocketException sx)
 			{

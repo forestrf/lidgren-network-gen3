@@ -40,6 +40,8 @@ namespace Lidgren.Network
 		internal bool m_isFragment;
 		internal double m_receiveTime;
 
+		float userMsgTime = float.NaN;
+
 		/// <summary>
 		/// Constructor
 		/// </summary>
@@ -63,6 +65,7 @@ namespace Lidgren.Network
 			cloned.m_data = m_data;
 			cloned.m_bitLength = m_bitLength;
 			cloned.m_readPosition = m_readPosition;
+			cloned.userMsgTime = userMsgTime;
 			return cloned;
 		}
 
@@ -113,6 +116,14 @@ namespace Lidgren.Network
 			m_senderConnection = null;
 			m_bitLength = 0;
 			m_isFragment = false;
+			userMsgTime = float.NaN;
+		}
+
+		public float ReadMsgTime() {
+			if (float.IsNaN(userMsgTime)) {
+				userMsgTime = ReadSingle();
+			}
+			return userMsgTime;
 		}
 
 		/// <summary>

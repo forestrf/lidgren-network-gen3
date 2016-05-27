@@ -44,6 +44,8 @@ namespace Lidgren.Network
 		internal int m_fragmentChunkByteSize;	  // size, in bytes, of every chunk but the last one
 		internal int m_fragmentChunkNumber;       // which number chunk this is, starting with 0
 
+		float userMsgTime = float.NaN;
+		
 		/// <summary>
 		/// Create a copy of this Message
 		/// </summary>
@@ -57,6 +59,7 @@ namespace Lidgren.Network
 			cloned.m_data = this.m_data;
 			cloned.m_bitLength = this.m_bitLength;
 			cloned.m_readPosition = this.m_readPosition;
+			cloned.userMsgTime = this.userMsgTime;
 			return cloned;
 		}
 
@@ -71,6 +74,14 @@ namespace Lidgren.Network
 			m_isSent = false;
 			NetException.Assert(m_recyclingCount == 0);
 			m_fragmentGroup = 0;
+			userMsgTime = float.NaN;
+		}
+
+		public void WriteMsgTime(float time) {
+			if (float.IsNaN(userMsgTime)) {
+				Write(time);
+				userMsgTime = time;
+			}
 		}
 
 		internal int Encode(byte[] intoBuffer, int ptr, int sequenceNumber)

@@ -74,7 +74,7 @@ namespace Lidgren.Network
 			m_isSent = false;
 			NetException.Assert(m_recyclingCount == 0);
 			m_fragmentGroup = 0;
-			userMsgTime = float.NaN;
+			ResetMsgTime();
 		}
 
 		public void WriteMsgTime(float time) {
@@ -82,6 +82,10 @@ namespace Lidgren.Network
 				Write(time);
 				userMsgTime = time;
 			}
+		}
+
+		public void ResetMsgTime() {
+			userMsgTime = float.NaN;
 		}
 
 		internal int Encode(byte[] intoBuffer, int ptr, int sequenceNumber)

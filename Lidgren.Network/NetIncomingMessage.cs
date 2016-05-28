@@ -116,7 +116,7 @@ namespace Lidgren.Network
 			m_senderConnection = null;
 			m_bitLength = 0;
 			m_isFragment = false;
-			userMsgTime = float.NaN;
+			ResetMsgTime();
 		}
 
 		public float ReadMsgTime() {
@@ -124,6 +124,10 @@ namespace Lidgren.Network
 				userMsgTime = ReadSingle();
 			}
 			return userMsgTime;
+		}
+
+		public void ResetMsgTime() {
+			userMsgTime = float.NaN;
 		}
 
 		/// <summary>

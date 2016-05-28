@@ -113,7 +113,7 @@ namespace Lidgren.Network
 		/// </summary>
 		public long DroppedMessages { get { return m_droppedMessages; } }
 
-		// public double LastSendRespondedTo { get { return m_connection.m_lastSendRespondedTo; } }
+		// public float LastSendRespondedTo { get { return m_connection.m_lastSendRespondedTo; } }
 
 #if !USE_RELEASE_STATISTICS
 		[Conditional("DEBUG")]

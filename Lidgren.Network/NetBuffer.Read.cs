@@ -675,9 +675,9 @@ namespace Lidgren.Network
 		/// <summary>
 		/// Reads a value, in local time comparable to NetTime.Now, written using WriteTime() for the connection supplied
 		/// </summary>
-		public double ReadTime(NetConnection connection, bool highPrecision)
+		public float ReadTime(NetConnection connection)
 		{
-			double remoteTime = (highPrecision ? ReadDouble() : (double)ReadSingle());
+			float remoteTime = ReadSingle();
 
 			if (connection == null)
 				throw new NetException("Cannot call ReadTime() on message without a connected sender (ie. unconnected messages)");

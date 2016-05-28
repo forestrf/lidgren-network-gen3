@@ -548,7 +548,7 @@ namespace Lidgren.Network
 		/// </summary>
 		public void WriteSignedSingle(float value, int numberOfBits)
 		{
-			if (value < -1.0 || value > 1.0)
+			if (value < -1 || value > 1)
 				throw new NetException("WriteSignedSingle() must be passed a float in the range -1 to 1; val is " + value);
 
 			float unit = (value + 1.0f) * 0.5f;
@@ -563,7 +563,7 @@ namespace Lidgren.Network
 		/// </summary>
 		public void WriteUnitSingle(float value, int numberOfBits)
 		{
-			if (value < 0.0 || value > 1.0)
+			if (value < 0 || value > 1)
 				throw new NetException("WriteUnitSingle() must be passed a float in the range 0 to 1; val is " + value);
 
 			int maxValue = (1 << numberOfBits) - 1;
@@ -653,24 +653,17 @@ namespace Lidgren.Network
 		/// <summary>
 		/// Writes the current local time to a message; readable (and convertable to local time) by the remote host using ReadTime()
 		/// </summary>
-		public void WriteTime(bool highPrecision)
+		public void WriteTime()
 		{
-			double localTime = NetTime.Now;
-			if (highPrecision)
-				Write(localTime);
-			else
-				Write((float)localTime);
+			Write(NetTime.Now);
 		}
 
 		/// <summary>
 		/// Writes a local timestamp to a message; readable (and convertable to local time) by the remote host using ReadTime()
 		/// </summary>
-		public void WriteTime(double localTime, bool highPrecision)
+		public void WriteTime(float localTime)
 		{
-			if (highPrecision)
-				Write(localTime);
-			else
-				Write((float)localTime);
+			Write(localTime);
 		}
 
 		/// <summary>

@@ -355,8 +355,8 @@ namespace Lidgren.Network
 			if (bytes < 4000) // 1-4 kb is printed in bytes
 				return bytes + " bytes";
 			if (bytes < 1000 * 1000) // 4-999 kb is printed in kb
-				return Math.Round(((double)bytes / 1000.0), 2) + " kilobytes";
-			return Math.Round(((double)bytes / (1000.0 * 1000.0)), 2) + " megabytes"; // else megabytes
+				return Math.Round(bytes / 1000f, 2) + " kilobytes";
+			return Math.Round(bytes / (1000f * 1000f), 2) + " megabytes"; // else megabytes
 		}
 
 		internal static int RelativeSequenceNumber(int nr, int expected)

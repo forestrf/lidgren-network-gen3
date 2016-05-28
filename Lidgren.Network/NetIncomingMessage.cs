@@ -140,9 +140,9 @@ namespace Lidgren.Network
 		/// Reads a value, in local time comparable to NetTime.Now, written using WriteTime()
 		/// Must have a connected sender
 		/// </summary>
-		public double ReadTime(bool highPrecision)
+		public float ReadTime()
 		{
-			return ReadTime(m_senderConnection, highPrecision);
+			return ReadTime(m_senderConnection);
 		}
 
 		/// <summary>

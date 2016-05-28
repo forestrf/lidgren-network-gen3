@@ -44,7 +44,7 @@ namespace Lidgren.Network
 		private NetPeer m_peer;
 		private ManualResetEvent m_discoveryComplete = new ManualResetEvent(false);
 
-		internal double m_discoveryResponseDeadline;
+		internal float m_discoveryResponseDeadline;
 
 		private UPnPStatus m_status;
 
@@ -59,7 +59,7 @@ namespace Lidgren.Network
 		public NetUPnP(NetPeer peer)
 		{
 			m_peer = peer;
-			m_discoveryResponseDeadline = double.MinValue;
+			m_discoveryResponseDeadline = float.MinValue;
 		}
 
 		internal void Discover(NetPeer peer)
@@ -71,7 +71,7 @@ namespace Lidgren.Network
 "MAN:\"ssdp:discover\"\r\n" +
 "MX:3\r\n\r\n";
 
-			m_discoveryResponseDeadline = NetTime.Now + 6.0; // arbitrarily chosen number, router gets 6 seconds to respond
+			m_discoveryResponseDeadline = NetTime.Now + 6; // arbitrarily chosen number, router gets 6 seconds to respond
 			m_status = UPnPStatus.Discovering;
 
 			byte[] arr = System.Text.Encoding.UTF8.GetBytes(str);

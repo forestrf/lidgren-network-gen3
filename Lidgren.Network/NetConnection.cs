@@ -75,12 +75,12 @@ namespace Lidgren.Network
 		public NetOutgoingMessage LocalHailMessage { get { return m_localHailMessage; } }
 
 		// gets the time before automatically resending an unacked message
-		internal double GetResendDelay()
+		internal float GetResendDelay()
 		{
-			double avgRtt = m_averageRoundtripTime;
+			float avgRtt = m_averageRoundtripTime;
 			if (avgRtt <= 0)
-				avgRtt = 0.1; // "default" resend is based on 100 ms roundtrip time
-			return 0.025 + (avgRtt * 2.1); // 25 ms + double rtt
+				avgRtt = 0.1f; // "default" resend is based on 100 ms roundtrip time
+			return 0.025f + (avgRtt * 2.1f); // 25 ms + double rtt
 		}
 
 		internal NetConnection(NetPeer peer, NetEndPoint remoteEndPoint)

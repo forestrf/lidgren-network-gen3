@@ -32,11 +32,11 @@ namespace Lidgren.Network
 		/// <summary>
 		/// Given seconds it will output a human friendly readable string (milliseconds if less than 60 seconds)
 		/// </summary>
-		public static string ToReadable(double seconds)
+		public static string ToReadable(float seconds)
 		{
 			if (seconds > 60)
 				return TimeSpan.FromSeconds(seconds).ToString();
-			return (seconds * 1000.0).ToString("N2") + " ms";
+			return (seconds * 1000).ToString("N2") + " ms";
 		}
 	}
 }

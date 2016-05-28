@@ -40,7 +40,7 @@ namespace Lidgren.Network
 		private class DelayedPacket
 		{
 			public byte[] Data;
-			public double DelayedUntil;
+			public float DelayedUntil;
 			public NetEndPoint Target;
 		}
 
@@ -104,7 +104,7 @@ namespace Lidgren.Network
 			if (m_delayedPackets.Count <= 0)
 				return;
 
-			double now = NetTime.Now;
+			float now = NetTime.Now;
 
 			bool connectionReset;
 

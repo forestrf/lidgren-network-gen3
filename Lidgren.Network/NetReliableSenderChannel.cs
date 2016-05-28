@@ -18,7 +18,7 @@ namespace Lidgren.Network
 		private NetBitVector m_receivedAcks;
 		internal NetStoredReliableMessage[] m_storedMessages;
 
-		internal double m_resendDelay;
+		internal float m_resendDelay;
 
 		internal override int WindowSize { get { return m_windowSize; } }
 
@@ -83,7 +83,7 @@ namespace Lidgren.Network
 
 				m_anyStoredResends = true;
 
-				double t = storedMsg.LastSent;
+				float t = storedMsg.LastSent;
 				if (t > 0 && (now - t) > m_resendDelay)
 				{
 					// deduce sequence number
@@ -148,10 +148,10 @@ namespace Lidgren.Network
 			return;
 		}
 
-		private void DestoreMessage(double now, int storeIndex, out bool resetTimeout)
+		private void DestoreMessage(float now, int storeIndex, out bool resetTimeout)
 		{
 			// reset timeout if we receive ack within kThreshold of sending it
-			const double kThreshold = 2.0;
+			const float kThreshold = 2;
 			var srm = m_storedMessages[storeIndex];
 			resetTimeout = (srm.NumSent == 1) && (now - srm.LastSent < kThreshold);
 
@@ -270,7 +270,7 @@ namespace Lidgren.Network
 						NetOutgoingMessage rmsg = m_storedMessages[slot].Message;
 						//m_connection.m_peer.LogVerbose("Resending #" + rnr + " (" + rmsg + ")");
 
-						if (now - m_storedMessages[slot].LastSent < (m_resendDelay * 0.35))
+						if (now - m_storedMessages[slot].LastSent < (m_resendDelay * 0.35f))
 						{
 							// already resent recently
 						}

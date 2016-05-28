@@ -45,6 +45,9 @@ namespace UnitTests
 			msg.Write((ushort)44);
 			msg.Write(UInt64.MaxValue, 64);
 			msg.Write(true);
+			msg.WriteRangedInteger(0, 2, 0);
+			msg.WriteRangedInteger(0, 2, 1);
+			msg.WriteRangedInteger(0, 2, 2);
 
 			msg.WritePadBits();
 
@@ -90,7 +93,10 @@ namespace UnitTests
 
 			bdr.Append(inc.ReadUInt64());
 			bdr.Append(inc.ReadBoolean());
-		
+			bdr.Append(inc.ReadRangedInteger(0, 2));
+			bdr.Append(inc.ReadRangedInteger(0, 2));
+			bdr.Append(inc.ReadRangedInteger(0, 2));
+
 			inc.SkipPadBits();
 
 			bdr.Append(inc.ReadSingle());
@@ -102,7 +108,7 @@ namespace UnitTests
 			bdr.Append(inc.ReadVariableUInt32());
 			bdr.Append(inc.ReadVariableInt64());
 
-			if (bdr.ToString().Equals("False-342duke of earl434418446744073709551615True56784521159980224614-4747000048-49"))
+			if (bdr.ToString().Equals("False-342duke of earl434418446744073709551615True01256784521159980224614-4747000048-49"))
 				Console.WriteLine("Read/write tests OK");
 			else
 				throw new NetException("Read/write tests FAILED!");

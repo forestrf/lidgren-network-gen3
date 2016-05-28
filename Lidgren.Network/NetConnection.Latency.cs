@@ -31,7 +31,7 @@ namespace Lidgren.Network
 		/// <summary>
 		/// Gets local time value comparable to NetTime.Now from a remote value
 		/// </summary>
-		public double GetLocalTime(double remoteTimestamp)
+		public float GetLocalTime(float remoteTimestamp)
 		{
 			return remoteTimestamp - m_remoteTimeOffset;
 		}
@@ -39,7 +39,7 @@ namespace Lidgren.Network
 		/// <summary>
 		/// Gets the remote time value for a local time value produced by NetTime.Now
 		/// </summary>
-		public double GetRemoteTime(double localTimestamp)
+		public float GetRemoteTime(float localTimestamp)
 		{
 			return localTimestamp + m_remoteTimeOffset;
 		}
@@ -117,7 +117,7 @@ namespace Lidgren.Network
 			}
 
 			// update resend delay for all channels
-			double resendDelay = GetResendDelay();
+			float resendDelay = GetResendDelay();
 			for (int i = 0; i < m_sendChannels.Length; i++)
 			{
 				var chan = m_sendChannels[i];

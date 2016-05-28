@@ -109,7 +109,7 @@ namespace Lidgren.Network
 		private void BindSocket(bool reBind)
 		{
 			float now = NetTime.Now;
-			if (now - m_lastSocketBind < 1.0)
+			if (now - m_lastSocketBind < 1)
 			{
 				LogDebug("Suppressed socket rebind; last bound " + (now - m_lastSocketBind) + " seconds ago");
 				return; // only allow rebind once every second
@@ -314,7 +314,7 @@ namespace Lidgren.Network
 			int maxCHBpS = 1250 - m_connections.Count;
 			if (maxCHBpS < 250)
 				maxCHBpS = 250;
-			if (delta > (1.0 / (double)maxCHBpS) || delta < 0.0) // max connection heartbeats/second max
+			if (delta > (1f / maxCHBpS) || delta < 0) // max connection heartbeats/second max
 			{
 				m_frameCounter++;
 				m_lastHeartbeat = now;

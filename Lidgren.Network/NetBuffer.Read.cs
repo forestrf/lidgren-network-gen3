@@ -275,7 +275,7 @@ namespace Lidgren.Network
 		{
 			if (numberOfBits < 1 || numberOfBits > 32)
 				throw new NetException("ReadUInt32(bits) can only read between 1 and 32 bits");
-			if (m_bitLength - m_readPosition < 32)
+			if (m_bitLength - m_readPosition < numberOfBits)
 				throw new NetException(c_readOverflowError);
 
 			UInt32 retval = NetBitWriter.ReadUInt32(m_data, numberOfBits, m_readPosition);

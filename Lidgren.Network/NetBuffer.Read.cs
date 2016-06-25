@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using System.Net;
+using System.Threading;
 
 #if !__NOIPENDPOINT__
 using NetEndPoint = System.Net.IPEndPoint;
@@ -17,7 +18,7 @@ namespace Lidgren.Network
 	{
 		private const string c_readOverflowError = "Trying to read past the buffer size - likely caused by mismatching Write/Reads, different size or order.";
 
-		private static SimpleArrayPoolThreadSafe<Byte> bytePool = new SimpleArrayPoolThreadSafe<Byte>();
+		private static byte[] s_buffer;
 
 		/// <summary>
 		/// Reads a boolean value (stored as a single bit) written using Write(bool)
@@ -375,10 +376,10 @@ namespace Lidgren.Network
 				return retval;
 			}
 
-			byte[] bytes = bytePool.Get(4);
+			byte[] bytes = Interlocked.Exchange(ref s_buffer, null) ?? new byte[8];
 			ReadBytes(bytes, 0, 4);
 			float res = BitConverter.ToSingle(bytes, 0);
-			bytePool.Recycle(bytes);
+			s_buffer = bytes;
 			return res;
 		}
 
@@ -400,10 +401,10 @@ namespace Lidgren.Network
 				return true;
 			}
 
-			byte[] bytes = bytePool.Get(4);
+			byte[] bytes = Interlocked.Exchange(ref s_buffer, null) ?? new byte[8];
 			ReadBytes(bytes, 0, 4);
 			result = BitConverter.ToSingle(bytes, 0);
-			bytePool.Recycle(bytes);
+			s_buffer = bytes;
 			return true;
 		}
 
@@ -422,11 +423,11 @@ namespace Lidgren.Network
 				m_readPosition += 64;
 				return retval;
 			}
-			
-			byte[] bytes = bytePool.Get(8);
+
+			byte[] bytes = Interlocked.Exchange(ref s_buffer, null) ?? new byte[8];
 			ReadBytes(bytes, 0, 8);
 			double res = BitConverter.ToDouble(bytes, 0);
-			bytePool.Recycle(bytes);
+			s_buffer = bytes;
 			return res;
 		}
 
@@ -721,67 +722,6 @@ namespace Lidgren.Network
 		public void SkipPadBits(int numberOfBits)
 		{
 			m_readPosition += numberOfBits;
-		}
-	}
-
-	/// <summary>
-	/// Pool to store the arrays needed to read numbers bigger than one byte
-	/// There is no limit to the number of stored arrays
-	/// </summary>
-	/// <typeparam name="T">Type of the array. Probably byte</typeparam>
-	public class SimpleArrayPoolThreadSafe<T> {
-		// keep track of the stored arrays to prevent storing 2 times the same array
-		HashSet<int> currentReferences = new HashSet<int>();
-		Dictionary<int, Stack<T[]>> reusable = new Dictionary<int, Stack<T[]>>();
-		
-		/// <summary>
-		/// Get an array from the pool
-		/// </summary>
-		/// <param name="size">size of the array</param>
-		public T[] Get(int size) {
-			Stack<T[]> s;
-			lock (reusable) {
-				if (reusable.TryGetValue(size, out s) && s.Count > 0) {
-					T[] t = s.Pop();
-					currentReferences.Remove(t.GetHashCode());
-					return t;
-				} else {
-					return new T[size];
-				}
-			}
-		}
-		
-		/// <summary>
-		/// Recycle an array
-		/// Trying to recycle a already recycled array will make nothing, but cheking if it was recycled is not free
-		/// </summary>
-		/// <param name="array_to_recycle">The array to recycle</param>
-		public void Recycle(T[] array_to_recycle) {
-			if (array_to_recycle == null) return;
-			if (array_to_recycle.Length == 0) return;
-
-			Stack<T[]> s;
-			lock (reusable) {
-				if (reusable.TryGetValue(array_to_recycle.Length, out s)) {
-					if (currentReferences.Contains(array_to_recycle.GetHashCode())) {
-						// Trying to recycle an already recycled element;
-						return;
-					}
-				} else {
-					s = new Stack<T[]>();
-					reusable.Add(array_to_recycle.Length, s);
-				}
-
-				currentReferences.Add(array_to_recycle.GetHashCode());
-				s.Push(array_to_recycle);
-			}
-		}
-
-		public void Reset() {
-			lock (reusable) {
-				currentReferences = new HashSet<int>();
-				reusable = new Dictionary<int, Stack<T[]>>();
-			}
 		}
 	}
 }

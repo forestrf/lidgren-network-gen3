@@ -18,11 +18,12 @@ namespace Lidgren.Network
 				y: ReadSingle());
 		}
 
-		public void Write(Vector3 vector)
+		public NetBuffer Write(Vector3 vector)
 		{
 			Write(vector.x);
 			Write(vector.y);
 			Write(vector.z);
+			return this;
 		}
 
 		public Vector3 ReadVector3()
@@ -33,12 +34,13 @@ namespace Lidgren.Network
 				z: ReadSingle());
 		}
 
-		public void Write(Vector4 vector)
+		public NetBuffer Write(Vector4 vector)
 		{
 			Write(vector.x);
 			Write(vector.y);
 			Write(vector.z);
 			Write(vector.w);
+			return this;
 		}
 
 		public Vector4 ReadVector4()
@@ -50,12 +52,13 @@ namespace Lidgren.Network
 				w: ReadSingle());
 		}
 
-		public void Write(Quaternion quaternion)
+		public NetBuffer Write(Quaternion quaternion)
 		{
 			Write(quaternion.x);
 			Write(quaternion.y);
 			Write(quaternion.z);
 			Write(quaternion.w);
+			return this;
 		}
 
 		public Quaternion ReadQuaternion()
@@ -67,11 +70,12 @@ namespace Lidgren.Network
 				w: ReadFloat());
 		}
 
-		public void WriteRgbColor(Color32 color)
+		public NetBuffer WriteRgbColor(Color32 color)
 		{
 			Write(color.r);
 			Write(color.g);
 			Write(color.b);
+			return this;
 		}
 
 		public Color32 ReadRgbColor()
@@ -83,12 +87,13 @@ namespace Lidgren.Network
 				a: byte.MaxValue);
 		}
 
-		public void WriteRgbaColor(Color32 color)
+		public NetBuffer WriteRgbaColor(Color32 color)
 		{
 			Write(color.r);
 			Write(color.g);
 			Write(color.b);
 			Write(color.a);
+			return this;
 		}
 
 		public Color32 ReadRgbaColor()
@@ -100,10 +105,11 @@ namespace Lidgren.Network
 				a: ReadByte());
 		}
 
-		public void Write(Ray ray)
+		public NetBuffer Write(Ray ray)
 		{
 			Write(ray.direction);
 			Write(ray.origin);
+			return this;
 		}
 
 		public Ray ReadRay()
@@ -113,10 +119,11 @@ namespace Lidgren.Network
 				origin: ReadVector3());
 		}
 
-		public void Write(Plane plane)
+		public NetBuffer Write(Plane plane)
 		{
 			Write(plane.normal);
 			Write(plane.distance);
+			return this;
 		}
 
 		public Plane ReadPlane()
@@ -126,7 +133,7 @@ namespace Lidgren.Network
 				d: ReadSingle());
 		}
 
-		public void Write(Matrix4x4 matrix)
+		public NetBuffer Write(Matrix4x4 matrix)
 		{
 			Write(matrix.m00);
 			Write(matrix.m01);
@@ -144,6 +151,7 @@ namespace Lidgren.Network
 			Write(matrix.m31);
 			Write(matrix.m32);
 			Write(matrix.m33);
+			return this;
 		}
 
 		public Matrix4x4 ReadMatrix4X4()
@@ -169,12 +177,13 @@ namespace Lidgren.Network
 			};
 		}
 
-		public void Write(Rect rect)
+		public NetBuffer Write(Rect rect)
 		{
 			Write(rect.xMin);
 			Write(rect.yMin);
 			Write(rect.width);
 			Write(rect.height);
+			return this;
 		}
 
 		public Rect ReadRect()

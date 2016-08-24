@@ -95,7 +95,7 @@ namespace Lidgren.Network
 				return;
 			}
 
-			m_timeoutDeadline = now + m_peerConfiguration.m_connectionTimeout;
+			ResetTimeout(now);
 
 			double rtt = now - m_sentPingTime;
 			NetException.Assert(rtt >= 0);

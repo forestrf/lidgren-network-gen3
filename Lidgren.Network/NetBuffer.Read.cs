@@ -731,5 +731,81 @@ namespace Lidgren.Network
 		{
 			m_readPosition += numberOfBits;
 		}
+
+		// https://bitbucket.org/Unity-Technologies/networking/src/78ca8544bbf4e87c310ce2a9a3fc33cdad2f9bb1/Runtime/NetworkReader.cs?at=5.3&fileviewer=file-view-default#NetworkReader.cs-59
+		// http://sqlite.org/src4/doc/trunk/www/varint.wiki
+		[CLSCompliant(false)]
+		public UInt32 ReadPackedUInt32() {
+			byte a0 = ReadByte();
+			if (a0 < 241) {
+				return a0;
+			}
+			byte a1 = ReadByte();
+			if (a0 >= 241 && a0 <= 248) {
+				return (UInt32) (240 + 256 * (a0 - 241) + a1);
+			}
+			byte a2 = ReadByte();
+			if (a0 == 249) {
+				return (UInt32) (2288 + 256 * a1 + a2);
+			}
+			byte a3 = ReadByte();
+			if (a0 == 250) {
+				return a1 + (((UInt32) a2) << 8) + (((UInt32) a3) << 16);
+			}
+			byte a4 = ReadByte();
+			if (a0 >= 251) {
+				return a1 + (((UInt32) a2) << 8) + (((UInt32) a3) << 16) + (((UInt32) a4) << 24);
+			}
+			throw new IndexOutOfRangeException("ReadPackedUInt32() failure: " + a0);
+		}
+
+		[CLSCompliant(false)]
+		public UInt64 ReadPackedUInt64() {
+			byte a0 = ReadByte();
+			if (a0 < 241) {
+				return a0;
+			}
+			byte a1 = ReadByte();
+			if (a0 >= 241 && a0 <= 248) {
+				return 240 + 256 * (a0 - ((UInt64) 241)) + a1;
+			}
+			byte a2 = ReadByte();
+			if (a0 == 249) {
+				return 2288 + (((UInt64) 256) * a1) + a2;
+			}
+			byte a3 = ReadByte();
+			if (a0 == 250) {
+				return a1 + (((UInt64) a2) << 8) + (((UInt64) a3) << 16);
+			}
+			byte a4 = ReadByte();
+			if (a0 == 251) {
+				return a1 + (((UInt64) a2) << 8) + (((UInt64) a3) << 16) + (((UInt64) a4) << 24);
+			}
+
+
+			byte a5 = ReadByte();
+			if (a0 == 252) {
+				return a1 + (((UInt64) a2) << 8) + (((UInt64) a3) << 16) + (((UInt64) a4) << 24) + (((UInt64) a5) << 32);
+			}
+
+
+			byte a6 = ReadByte();
+			if (a0 == 253) {
+				return a1 + (((UInt64) a2) << 8) + (((UInt64) a3) << 16) + (((UInt64) a4) << 24) + (((UInt64) a5) << 32) + (((UInt64) a6) << 40);
+			}
+
+
+			byte a7 = ReadByte();
+			if (a0 == 254) {
+				return a1 + (((UInt64) a2) << 8) + (((UInt64) a3) << 16) + (((UInt64) a4) << 24) + (((UInt64) a5) << 32) + (((UInt64) a6) << 40) + (((UInt64) a7) << 48);
+			}
+
+
+			byte a8 = ReadByte();
+			if (a0 == 255) {
+				return a1 + (((UInt64) a2) << 8) + (((UInt64) a3) << 16) + (((UInt64) a4) << 24) + (((UInt64) a5) << 32) + (((UInt64) a6) << 40) + (((UInt64) a7) << 48) + (((UInt64) a8) << 56);
+			}
+			throw new IndexOutOfRangeException("ReadPackedUInt64() failure: " + a0);
+		}
 	}
 }

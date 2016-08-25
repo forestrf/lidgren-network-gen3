@@ -740,5 +740,121 @@ namespace Lidgren.Network
 			}
 			return this;
 		}
+
+		// https://bitbucket.org/Unity-Technologies/networking/src/78ca8544bbf4e87c310ce2a9a3fc33cdad2f9bb1/Runtime/NetworkWriter.cs?at=5.3&fileviewer=file-view-default#NetworkWriter.cs-59
+		// http://sqlite.org/src4/doc/trunk/www/varint.wiki
+		[CLSCompliant(false)]
+		public NetBuffer WritePackedUInt32(UInt32 value) {
+			if (value <= 240) {
+				Write((byte) value);
+				return this;
+			}
+			if (value <= 2287) {
+				Write((byte) ((value - 240) / 256 + 241));
+				Write((byte) ((value - 240) % 256));
+				return this;
+			}
+			if (value <= 67823) {
+				Write((byte) 249);
+				Write((byte) ((value - 2288) / 256));
+				Write((byte) ((value - 2288) % 256));
+				return this;
+			}
+			if (value <= 16777215) {
+				Write((byte) 250);
+				Write((byte) (value & 0xFF));
+				Write((byte) ((value >> 8) & 0xFF));
+				Write((byte) ((value >> 16) & 0xFF));
+				return this;
+			}
+
+			// all other values of uint
+			Write((byte) 251);
+			Write((byte) (value & 0xFF));
+			Write((byte) ((value >> 8) & 0xFF));
+			Write((byte) ((value >> 16) & 0xFF));
+			Write((byte) ((value >> 24) & 0xFF));
+
+			return this;
+		}
+
+		[CLSCompliant(false)]
+		public NetBuffer WritePackedUInt64(UInt64 value) {
+			if (value <= 240) {
+				Write((byte) value);
+				return this;
+			}
+			if (value <= 2287) {
+				Write((byte) ((value - 240) / 256 + 241));
+				Write((byte) ((value - 240) % 256));
+				return this;
+			}
+			if (value <= 67823) {
+				Write((byte) 249);
+				Write((byte) ((value - 2288) / 256));
+				Write((byte) ((value - 2288) % 256));
+				return this;
+			}
+			if (value <= 16777215) {
+				Write((byte) 250);
+				Write((byte) (value & 0xFF));
+				Write((byte) ((value >> 8) & 0xFF));
+				Write((byte) ((value >> 16) & 0xFF));
+				return this;
+			}
+			if (value <= 4294967295) {
+				Write((byte) 251);
+				Write((byte) (value & 0xFF));
+				Write((byte) ((value >> 8) & 0xFF));
+				Write((byte) ((value >> 16) & 0xFF));
+				Write((byte) ((value >> 24) & 0xFF));
+				return this;
+			}
+			if (value <= 1099511627775) {
+				Write((byte) 252);
+				Write((byte) (value & 0xFF));
+				Write((byte) ((value >> 8) & 0xFF));
+				Write((byte) ((value >> 16) & 0xFF));
+				Write((byte) ((value >> 24) & 0xFF));
+				Write((byte) ((value >> 32) & 0xFF));
+				return this;
+			}
+			if (value <= 281474976710655) {
+				Write((byte) 253);
+				Write((byte) (value & 0xFF));
+				Write((byte) ((value >> 8) & 0xFF));
+				Write((byte) ((value >> 16) & 0xFF));
+				Write((byte) ((value >> 24) & 0xFF));
+				Write((byte) ((value >> 32) & 0xFF));
+				Write((byte) ((value >> 40) & 0xFF));
+				return this;
+			}
+			if (value <= 72057594037927935) {
+				Write((byte) 254);
+				Write((byte) (value & 0xFF));
+				Write((byte) ((value >> 8) & 0xFF));
+				Write((byte) ((value >> 16) & 0xFF));
+				Write((byte) ((value >> 24) & 0xFF));
+				Write((byte) ((value >> 32) & 0xFF));
+				Write((byte) ((value >> 40) & 0xFF));
+				Write((byte) ((value >> 48) & 0xFF));
+				return this;
+			}
+
+			// all others
+			{
+				Write((byte) 255);
+				Write((byte) (value & 0xFF));
+				Write((byte) ((value >> 8) & 0xFF));
+				Write((byte) ((value >> 16) & 0xFF));
+				Write((byte) ((value >> 24) & 0xFF));
+				Write((byte) ((value >> 32) & 0xFF));
+				Write((byte) ((value >> 40) & 0xFF));
+				Write((byte) ((value >> 48) & 0xFF));
+				Write((byte) ((value >> 56) & 0xFF));
+			}
+
+			return this;
+		}
 	}
 }

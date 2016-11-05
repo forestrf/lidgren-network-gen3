@@ -78,6 +78,8 @@ namespace Lidgren.Network
 		}
 
 		public void WriteMsgTime(float time) {
+			if (float.IsNaN(time) || float.IsInfinity(time))
+				time = 0;
 			if (float.IsNaN(userMsgTime)) {
 				Write(time);
 				userMsgTime = time;

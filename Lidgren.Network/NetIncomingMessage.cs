@@ -122,6 +122,8 @@ namespace Lidgren.Network
 		public float ReadMsgTime() {
 			if (float.IsNaN(userMsgTime)) {
 				userMsgTime = ReadSingle();
+				if (float.IsNaN(userMsgTime) || float.IsInfinity(userMsgTime))
+					userMsgTime = 0;
 			}
 			return userMsgTime;
 		}
